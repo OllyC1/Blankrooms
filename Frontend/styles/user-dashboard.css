@@ -1,0 +1,535 @@
+/* User Dashboard Styles */
+.dashboard-page {
+    min-height: 100vh;
+    background: var(--gray-50);
+}
+
+.dashboard-main {
+    padding-top: 120px;
+    padding-bottom: var(--space-3xl);
+}
+
+/* Welcome Section */
+.welcome-section {
+    background: var(--primary-white);
+    border-radius: 16px;
+    padding: var(--space-3xl);
+    margin-bottom: var(--space-3xl);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.welcome-title {
+    font-size: 2.5rem;
+    font-weight: var(--font-weight-bold);
+    color: var(--gray-900);
+    margin-bottom: var(--space-sm);
+    letter-spacing: -0.02em;
+}
+
+.welcome-subtitle {
+    font-size: 1.125rem;
+    color: var(--gray-600);
+    margin: 0;
+}
+
+.btn-primary {
+    background: var(--gray-900);
+    color: var(--primary-white);
+    padding: var(--space-md) var(--space-xl);
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: var(--font-weight-semibold);
+    transition: var(--transition-normal);
+    display: inline-block;
+}
+
+.btn-primary:hover {
+    background: var(--gray-800);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+}
+
+.btn-secondary {
+    background: var(--primary-white);
+    color: var(--gray-900);
+    border: 1px solid var(--gray-300);
+    padding: var(--space-md) var(--space-xl);
+    border-radius: 8px;
+    font-weight: var(--font-weight-semibold);
+    cursor: pointer;
+    transition: var(--transition-normal);
+    text-decoration: none;
+    display: inline-block;
+}
+
+.btn-secondary:hover {
+    border-color: var(--gray-400);
+    background: var(--gray-50);
+}
+
+/* Tickets Section */
+.tickets-section {
+    background: var(--primary-white);
+    border-radius: 16px;
+    padding: var(--space-3xl);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space-3xl);
+}
+
+.section-title {
+    font-size: 1.875rem;
+    font-weight: var(--font-weight-bold);
+    color: var(--gray-900);
+    margin: 0;
+}
+
+.section-filters {
+    display: flex;
+    gap: var(--space-sm);
+}
+
+.filter-btn {
+    padding: var(--space-sm) var(--space-lg);
+    border: 1px solid var(--gray-300);
+    background: var(--primary-white);
+    color: var(--gray-600);
+    border-radius: 25px;
+    font-size: 0.875rem;
+    font-weight: var(--font-weight-medium);
+    cursor: pointer;
+    transition: var(--transition-normal);
+}
+
+.filter-btn:hover {
+    border-color: var(--gray-400);
+    color: var(--gray-900);
+}
+
+.filter-btn--active {
+    background: var(--gray-900);
+    color: var(--primary-white);
+    border-color: var(--gray-900);
+}
+
+/* Tickets Grid */
+.tickets-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: var(--space-xl);
+}
+
+.ticket-card {
+    background: var(--primary-white);
+    border: 1px solid var(--gray-200);
+    border-radius: 16px;
+    overflow: hidden;
+    transition: var(--transition-normal);
+    cursor: pointer;
+}
+
+.ticket-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+}
+
+.ticket-card__image {
+    height: 200px;
+    overflow: hidden;
+    position: relative;
+}
+
+.ticket-card__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+
+.ticket-card__status {
+    position: absolute;
+    top: var(--space-md);
+    right: var(--space-md);
+    background: rgba(255, 255, 255, 0.9);
+    color: var(--gray-900);
+    padding: var(--space-xs) var(--space-sm);
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: var(--font-weight-semibold);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.ticket-card__status--confirmed {
+    background: rgba(34, 197, 94, 0.9);
+    color: var(--primary-white);
+}
+
+.ticket-card__content {
+    padding: var(--space-xl);
+}
+
+.ticket-card__title {
+    font-size: 1.25rem;
+    font-weight: var(--font-weight-bold);
+    color: var(--gray-900);
+    margin-bottom: var(--space-sm);
+}
+
+.ticket-card__meta {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+    margin-bottom: var(--space-lg);
+}
+
+.ticket-card__date,
+.ticket-card__location {
+    font-size: 0.875rem;
+    color: var(--gray-600);
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+}
+
+.ticket-card__details {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: var(--space-lg);
+    border-top: 1px solid var(--gray-200);
+}
+
+.ticket-card__type {
+    font-size: 0.875rem;
+    font-weight: var(--font-weight-semibold);
+    color: var(--gray-900);
+}
+
+.ticket-card__quantity {
+    font-size: 0.875rem;
+    color: var(--gray-600);
+}
+
+.ticket-card__price {
+    font-size: 1.125rem;
+    font-weight: var(--font-weight-bold);
+    color: var(--gray-900);
+}
+
+/* Empty State */
+.empty-state {
+    text-align: center;
+    padding: var(--space-3xl) 0;
+}
+
+.empty-state__icon {
+    font-size: 4rem;
+    margin-bottom: var(--space-lg);
+    opacity: 0.5;
+}
+
+.empty-state__title {
+    font-size: 1.5rem;
+    font-weight: var(--font-weight-bold);
+    color: var(--gray-900);
+    margin-bottom: var(--space-md);
+}
+
+.empty-state__text {
+    font-size: 1rem;
+    color: var(--gray-600);
+    margin-bottom: var(--space-xl);
+}
+
+/* QR Code Modal */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    z-index: 1000;
+    animation: fadeIn 0.3s ease;
+}
+
+.modal.show {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-content {
+    background: var(--primary-white);
+    border-radius: 16px;
+    max-width: 500px;
+    width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+    animation: slideUp 0.3s ease;
+}
+
+.modal-header {
+    padding: var(--space-xl);
+    border-bottom: 1px solid var(--gray-200);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-title {
+    font-size: 1.25rem;
+    font-weight: var(--font-weight-bold);
+    color: var(--gray-900);
+    margin: 0;
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    font-size: 2rem;
+    color: var(--gray-400);
+    cursor: pointer;
+    transition: var(--transition-normal);
+    line-height: 1;
+}
+
+.modal-close:hover {
+    color: var(--gray-600);
+}
+
+.modal-body {
+    padding: var(--space-xl);
+}
+
+.ticket-qr {
+    text-align: center;
+    margin-bottom: var(--space-xl);
+}
+
+.qr-code {
+    background: var(--primary-white);
+    padding: var(--space-lg);
+    border-radius: 12px;
+    margin-bottom: var(--space-lg);
+    display: inline-block;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.ticket-info h4 {
+    font-size: 1.125rem;
+    font-weight: var(--font-weight-bold);
+    color: var(--gray-900);
+    margin-bottom: var(--space-sm);
+}
+
+.ticket-info p {
+    font-size: 0.875rem;
+    color: var(--gray-600);
+    margin-bottom: var(--space-xs);
+}
+
+.qr-code-text {
+    font-family: 'Courier New', monospace;
+    font-size: 0.75rem !important;
+    color: var(--gray-400) !important;
+    margin-top: var(--space-md) !important;
+}
+
+.qr-instructions {
+    background: var(--gray-50);
+    padding: var(--space-lg);
+    border-radius: 8px;
+    text-align: center;
+}
+
+.qr-instructions p {
+    font-size: 0.875rem;
+    color: var(--gray-600);
+    margin: 0;
+}
+
+.modal-footer {
+    padding: var(--space-xl);
+    border-top: 1px solid var(--gray-200);
+    display: flex;
+    gap: var(--space-md);
+    justify-content: flex-end;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .dashboard-main {
+        padding-top: 100px;
+    }
+
+    .welcome-section {
+        flex-direction: column;
+        text-align: center;
+        gap: var(--space-xl);
+    }
+
+    .section-header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: var(--space-lg);
+    }
+
+    .section-filters {
+        justify-content: center;
+    }
+
+    .tickets-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .welcome-title {
+        font-size: 2rem;
+    }
+
+    .modal-content {
+        width: 95%;
+        margin: var(--space-md);
+    }
+
+    .modal-footer {
+        flex-direction: column;
+    }
+}
+
+@media (max-width: 480px) {
+    .welcome-section,
+    .tickets-section {
+        padding: var(--space-xl);
+    }
+
+    .welcome-title {
+        font-size: 1.75rem;
+    }
+
+    .section-title {
+        font-size: 1.5rem;
+    }
+}
+
+/* Ticket Actions */
+.ticket-actions {
+    margin-top: 20px;
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.ticket-actions button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.2s;
+    font-size: 0.9rem;
+}
+
+.ticket-actions button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+.btn-download {
+    background: #28a745;
+    color: white;
+}
+
+.btn-download:hover {
+    background: #218838;
+}
+
+.btn-share {
+    background: #007bff;
+    color: white;
+}
+
+.btn-share:hover {
+    background: #0056b3;
+}
+
+/* Share Modal */
+.share-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+}
+
+.share-modal .share-content {
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    text-align: center;
+    max-width: 400px;
+    width: 90%;
+}
+
+.share-modal h3 {
+    margin: 0 0 20px 0;
+    color: #333;
+}
+
+.share-modal p {
+    margin: 0 0 20px 0;
+    color: #666;
+}
+
+.share-modal .share-options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.share-modal button {
+    padding: 12px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+
+.share-modal button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}

@@ -1,0 +1,28 @@
+{
+  "name": "blank-rooms-frontend",
+  "version": "1.0.0",
+  "description": "Blank Rooms - Modern Event Platform Frontend",
+  "main": "index.html",
+  "scripts": {
+    "dev": "npx http-server . -p 3000 -o",
+    "build": "echo 'Build process - ready for deployment'",
+    "lint": "echo 'Linting HTML, CSS, and JavaScript files'",
+    "format": "echo 'Formatting code with Prettier'"
+  },
+  "keywords": [
+    "events",
+    "entertainment",
+    "music",
+    "frontend",
+    "responsive",
+    "modern"
+  ],
+  "author": "Blank Rooms Team",
+  "license": "MIT",
+  "devDependencies": {
+    "http-server": "^14.1.1"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}

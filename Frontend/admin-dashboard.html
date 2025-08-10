@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Blankrooms</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/admin-dashboard.css">
+</head>
+<body>
+    <div class="admin-page">
+        <!-- Sidebar -->
+        <aside class="admin-sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">
+                    <img src="public/logo.jpg" alt="Blankrooms" class="sidebar-logo-img">
+                    <span class="sidebar-brand">BLANKROOMS</span>
+                </div>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <ul class="nav-list">
+                    <li class="nav-item">
+                        <button class="nav-link nav-link--active" data-section="overview">
+                            📊 Overview
+                        </button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="nav-link" data-section="events">
+                            🎭 Events
+                        </button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="nav-link" data-section="tickets">
+                            🎫 Tickets
+                        </button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="nav-link" data-section="videos">
+                            🎥 Videos
+                        </button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="nav-link" data-section="playlists">
+                            📝 Playlists
+                        </button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="nav-link" data-section="scanner">
+                            📱 QR Scanner
+                        </button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="nav-link" data-section="users">
+                            👥 Users
+                        </button>
+                    </li>
+                </ul>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="admin-info">
+                    <div class="admin-avatar">👤</div>
+                    <div class="admin-details">
+                        <div class="admin-name" id="adminName">Admin User</div>
+                        <div class="admin-role">Administrator</div>
+                    </div>
+                </div>
+                <button class="btn-logout" onclick="window.authManager.signOut()">
+                    🚪 Sign Out
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="admin-main">
+            <!-- Header -->
+            <header class="admin-header">
+                <div class="header-left">
+                    <h1 class="page-title" id="pageTitle">Overview</h1>
+                    <p class="page-subtitle" id="pageSubtitle">Welcome to your admin dashboard</p>
+                </div>
+                <div class="header-right">
+                    <button class="btn-primary" id="addNewBtn">
+                        ➕ Add New
+                    </button>
+                </div>
+            </header>
+
+            <!-- Content Sections -->
+            <div class="admin-content">
+                <!-- Overview Section -->
+                <section class="content-section" id="overview-section">
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon">🎭</div>
+                            <div class="stat-details">
+                                <div class="stat-number" id="totalEvents">0</div>
+                                <div class="stat-label">Total Events</div>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">🎫</div>
+                            <div class="stat-details">
+                                <div class="stat-number" id="totalTickets">0</div>
+                                <div class="stat-label">Tickets Sold</div>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">👥</div>
+                            <div class="stat-details">
+                                <div class="stat-number" id="totalUsers">0</div>
+                                <div class="stat-label">Total Users</div>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">💰</div>
+                            <div class="stat-details">
+                                <div class="stat-number" id="totalRevenue">£0</div>
+                                <div class="stat-label">Revenue</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="overview-grid">
+                        <div class="overview-card">
+                            <h3>Recent Events</h3>
+                            <div class="recent-events" id="recentEvents">
+                                <!-- Will be populated by JavaScript -->
+                            </div>
+                        </div>
+                        <div class="overview-card">
+                            <h3>Recent Tickets</h3>
+                            <div class="recent-tickets" id="recentTickets">
+                                <!-- Will be populated by JavaScript -->
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Events Section -->
+                <section class="content-section hidden" id="events-section">
+                    <div class="section-controls">
+                        <div class="search-bar">
+                            <input type="text" placeholder="Search events..." class="search-input" id="eventsSearch">
+                        </div>
+                        <div class="filter-controls">
+                            <select class="filter-select" id="eventsFilter">
+                                <option value="all">All Events</option>
+                                <option value="upcoming">Upcoming</option>
+                                <option value="past">Past</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="data-table">
+                        <table class="table" id="eventsTable">
+                            <thead>
+                                <tr>
+                                    <th>Event</th>
+                                    <th>Date</th>
+                                    <th>Location</th>
+                                    <th>Tickets Sold</th>
+                                    <th>Revenue</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="eventsTableBody">
+                                <!-- Will be populated by JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- Tickets Section -->
+                <section class="content-section hidden" id="tickets-section">
+                    <div class="section-controls">
+                        <div class="search-bar">
+                            <input type="text" placeholder="Search tickets..." class="search-input" id="ticketsSearch">
+                        </div>
+                        <div class="filter-controls">
+                            <select class="filter-select" id="ticketsFilter">
+                                <option value="all">All Tickets</option>
+                                <option value="confirmed">Confirmed</option>
+                                <option value="pending">Pending</option>
+                                <option value="cancelled">Cancelled</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="data-table">
+                        <table class="table" id="ticketsTable">
+                            <thead>
+                                <tr>
+                                    <th>Ticket ID</th>
+                                    <th>Event</th>
+                                    <th>Customer</th>
+                                    <th>Type</th>
+                                    <th>Quantity</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="ticketsTableBody">
+                                <!-- Will be populated by JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- Videos Section -->
+                <section class="content-section hidden" id="videos-section">
+                    <div class="section-controls">
+                        <div class="search-bar">
+                            <input type="text" placeholder="Search videos..." class="search-input" id="videosSearch">
+                        </div>
+                    </div>
+                    <div class="videos-grid" id="videosGrid">
+                        <!-- Will be populated by JavaScript -->
+                    </div>
+                </section>
+
+                <!-- Playlists Section -->
+                <section class="content-section hidden" id="playlists-section">
+                    <div class="section-controls">
+                        <div class="search-bar">
+                            <input type="text" placeholder="Search playlists..." class="search-input" id="playlistsSearch">
+                        </div>
+                    </div>
+                    <div class="playlists-grid" id="playlistsGrid">
+                        <!-- Will be populated by JavaScript -->
+                    </div>
+                </section>
+
+                <!-- QR Scanner Section -->
+                <section class="content-section hidden" id="scanner-section">
+                    <div class="scanner-container">
+                        <div class="scanner-header">
+                            <h3>QR Code Scanner</h3>
+                            <p>Scan customer tickets for event entry validation</p>
+                        </div>
+                        <div class="scanner-body">
+                            <div class="camera-container" id="cameraContainer">
+                                <video id="scannerVideo" autoplay playsinline></video>
+                                <div class="scanner-overlay">
+                                    <div class="scanner-frame"></div>
+                                </div>
+                            </div>
+                            <div class="scanner-controls">
+                                <button class="btn-primary" id="startScanBtn">Start Scanner</button>
+                                <button class="btn-secondary" id="stopScanBtn" style="display: none;">Stop Scanner</button>
+                                <button class="btn-demo" id="testScanBtn">Test with Demo Ticket</button>
+                            </div>
+                            <div class="scan-result" id="scanResult" style="display: none;">
+                                <!-- Scan results will appear here -->
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Users Section -->
+                <section class="content-section hidden" id="users-section">
+                    <div class="section-controls">
+                        <div class="search-bar">
+                            <input type="text" placeholder="Search users..." class="search-input" id="usersSearch">
+                        </div>
+                        <div class="filter-controls">
+                            <select class="filter-select" id="usersFilter">
+                                <option value="all">All Users</option>
+                                <option value="user">Regular Users</option>
+                                <option value="admin">Administrators</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="data-table">
+                        <table class="table" id="usersTable">
+                            <thead>
+                                <tr>
+                                    <th>User</th>
+                                    <th>Email</th>
+                                    <th>Role</th>
+                                    <th>Tickets</th>
+                                    <th>Joined</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="usersTableBody">
+                                <!-- Will be populated by JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            </div>
+        </main>
+
+        <!-- Modal for Add/Edit Forms -->
+        <div class="modal" id="adminModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title" id="modalTitle">Add New Item</h3>
+                    <button class="modal-close" id="closeModal">&times;</button>
+                </div>
+                <div class="modal-body" id="modalBody">
+                    <!-- Dynamic form content will be inserted here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+    <script src="scripts/event-data.js"></script>
+    <script src="scripts/admin-store.js"></script>
+    <script src="scripts/qr-generator.js"></script>
+    <script src="scripts/qr-scanner.js"></script>
+    <script src="scripts/auth.js"></script>
+    <script src="scripts/admin-dashboard.js"></script>
+</body>
+</html>

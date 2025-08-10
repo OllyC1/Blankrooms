@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In - Blankrooms</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/signin.css">
+</head>
+<body>
+    <div class="signin-page">
+        <!-- Header -->
+        <header class="header">
+            <nav class="nav container">
+                <div class="nav__brand">
+                    <a href="index.html" class="nav__logo">
+                        <img src="public/logo.jpg" alt="Blankrooms Logo" class="nav__logo-img">
+                        <span class="nav__brand-text">BLANKROOMS</span>
+                    </a>
+                </div>
+                <ul class="nav__menu">
+                    <li class="nav__item">
+                        <a href="events.html" class="nav__link">Events</a>
+                    </li>
+                    <li class="nav__item">
+                        <a href="#" class="nav__link">Videos</a>
+                    </li>
+                    <li class="nav__item">
+                        <a href="#" class="nav__link">Playlists</a>
+                    </li>
+                </ul>
+                <div class="nav__auth">
+                    <a href="signin.html" class="nav__signin nav__signin--active">Sign in</a>
+                    <a href="signup.html" class="nav__signup">Sign up</a>
+                </div>
+            </nav>
+        </header>
+
+        <!-- Main Content -->
+        <main class="signin-main">
+            <div class="signin-container">
+                <div class="signin-content">
+                    <div class="signin-form-section">
+                        <div class="signin-form-wrapper">
+                            <h1 class="signin-title">Sign in</h1>
+                            
+                            <form class="signin-form" id="signinForm">
+                                <div class="form-group">
+                                    <label for="email" class="form-label">Email</label>
+                                    <input 
+                                        type="email" 
+                                        id="email" 
+                                        name="email"
+                                        class="form-input" 
+                                        placeholder="your@email.com"
+                                        required
+                                    >
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="password" class="form-label">Password</label>
+                                    <input 
+                                        type="password" 
+                                        id="password" 
+                                        name="password"
+                                        class="form-input" 
+                                        placeholder="••••••"
+                                        required
+                                    >
+                                </div>
+
+                                <div class="form-group form-group--options">
+                                    <label class="checkbox-label">
+                                        <input 
+                                            type="checkbox" 
+                                            id="rememberMe" 
+                                            name="rememberMe"
+                                            class="checkbox-input"
+                                        >
+                                        <span class="checkbox-custom"></span>
+                                        <span class="checkbox-text">Remember me</span>
+                                    </label>
+                                    <a href="#" class="forgot-password">Forgot password?</a>
+                                </div>
+
+                                <button type="submit" class="btn-signin" id="signinBtn">
+                                    Sign in
+                                </button>
+                            </form>
+
+                            <div class="signin-footer">
+                                <p class="signin-footer-text">
+                                    Don't have an account? 
+                                    <a href="signup.html" class="signin-link">Sign up</a>
+                                </p>
+                            </div>
+
+                            <!-- Demo Accounts Section -->
+                            <div class="demo-accounts">
+                                <p class="demo-title">Demo Accounts:</p>
+                                <div class="demo-buttons">
+                                    <button type="button" class="btn-demo" id="demoUser">
+                                        Demo User
+                                    </button>
+                                    <button type="button" class="btn-demo" id="demoAdmin">
+                                        Demo Admin
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="signin-image-section">
+                        <div class="signin-image-wrapper">
+                            <img 
+                                src="public/signup.jpg" 
+                                alt="Sign in" 
+                                class="signin-image"
+                            >
+                            <div class="signin-image-overlay"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="scripts/auth.js"></script>
+    <script src="scripts/signin.js"></script>
+</body>
+</html>

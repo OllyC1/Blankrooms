@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blank Rooms - Events & Entertainment</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Header Navigation -->
+    <header class="header">
+        <nav class="nav">
+            <div class="nav__logo">
+                <img src="public/logo.jpg" alt="Blank Rooms Logo" class="nav__logo-img">
+                <span class="nav__logo-text">BLANK<br>ROOMS</span>
+            </div>
+            
+            <ul class="nav__menu">
+                <li class="nav__item">
+                    <a href="events.html" class="nav__link">Events</a>
+                </li>
+                <li class="nav__item">
+                    <a href="#videos" class="nav__link">Videos</a>
+                </li>
+                <li class="nav__item">
+                    <a href="#playlists" class="nav__link">Playlists</a>
+                </li>
+            </ul>
+            
+            <div class="nav__auth">
+                <a href="signin.html" class="nav__signin">Sign in</a>
+                <a href="signup.html" class="nav__signup">
+                    Sign up
+                    <svg class="nav__signup-arrow" width="16" height="16" viewBox="0 0 16 16">
+                        <path fill="currentColor" d="M8.293 10.293a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L9 8.172V3a1 1 0 00-2 0v5.172L4.707 5.879a1 1 0 00-1.414 1.414l3 3z"/>
+                    </svg>
+                </a>
+            </div>
+            
+            <!-- Mobile Menu Toggle -->
+            <button class="nav__toggle" aria-label="Toggle menu">
+                <span class="nav__toggle-line"></span>
+                <span class="nav__toggle-line"></span>
+                <span class="nav__toggle-line"></span>
+            </button>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <main class="main">
+        <section class="hero">
+            <div class="hero__background">
+                <img src="public/mainpage.jpg" alt="Live Performance" class="hero__bg-image">
+                <div class="hero__overlay"></div>
+            </div>
+            
+            <div class="hero__content">
+                <div class="hero__text">
+                    <h1 class="hero__title">
+                        Phones Down. <span class="hero__title--highlight">Hands Up</span>
+                    </h1>
+                    <p class="hero__subtitle">A true multi-genre experience</p>
+                </div>
+                
+                <a href="events.html" class="hero__cta">
+                    See upcoming events
+                    <span class="hero__cta-pulse"></span>
+                </a>
+            </div>
+            
+            <!-- Artistic Elements -->
+            <div class="hero__decorative">
+                <div class="hero__grid-overlay"></div>
+                <div class="hero__floating-elements">
+                    <div class="floating-element floating-element--1"></div>
+                    <div class="floating-element floating-element--2"></div>
+                    <div class="floating-element floating-element--3"></div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- JavaScript -->
+    <script src="scripts/main.js"></script>
+</body>
+</html>

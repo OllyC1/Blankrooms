@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Navigation</title>
+</head>
+<body>
+    <h1>Test Event Navigation</h1>
+    
+    <p>Click these links to test event detail navigation:</p>
+    
+    <ul>
+        <li><a href="event-detail.html?id=1">Shang-Chi (ID=1)</a></li>
+        <li><a href="event-detail.html?id=2">Yellow Buses (ID=2)</a></li>
+        <li><a href="event-detail.html?id=3">An Events' Event (ID=3)</a></li>
+        <li><a href="event-detail.html?id=4">Bend Pot (ID=4)</a></li>
+    </ul>
+
+    <script src="scripts/event-data.js"></script>
+    <script>
+        // Test the event data loading
+        console.log('Testing event data:');
+        console.log('Event 1 (Shang-Chi):', EventUtils.getEventById(1));
+        console.log('Event 2 (Yellow Buses):', EventUtils.getEventById(2));
+        console.log('Event 3 (An Events Event):', EventUtils.getEventById(3));
+        console.log('Event 4 (Bend Pot):', EventUtils.getEventById(4));
+        
+        // Test URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const eventId = urlParams.get('id');
+        console.log('Current URL event ID:', eventId);
+        
+        if (eventId) {
+            const event = EventUtils.getEventById(eventId);
+            console.log('Current event:', event);
+        }
+    </script>
+</body>
+</html>

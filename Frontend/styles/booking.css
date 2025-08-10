@@ -1,0 +1,382 @@
+/* Booking Page Styles */
+.booking-page {
+    min-height: 100vh;
+    background: var(--primary-white);
+}
+
+.booking-main {
+    padding-top: 120px;
+    padding-bottom: var(--space-3xl);
+}
+
+.booking-content {
+    display: grid;
+    grid-template-columns: 1fr 400px;
+    gap: var(--space-3xl);
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.booking-left {
+    padding-right: var(--space-xl);
+}
+
+.booking-title {
+    font-size: 2rem;
+    font-weight: var(--font-weight-bold);
+    color: var(--gray-900);
+    margin-bottom: var(--space-2xl);
+}
+
+/* Hidden Steps */
+.booking-step.hidden {
+    display: none;
+}
+
+/* Ticket Selection Styles */
+.ticket-options {
+    margin-bottom: var(--space-3xl);
+}
+
+.ticket-type {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--space-xl);
+    border: 1px solid var(--gray-200);
+    border-radius: 12px;
+    margin-bottom: var(--space-lg);
+    background: var(--primary-white);
+    transition: var(--transition-normal);
+}
+
+.ticket-type:hover {
+    border-color: var(--gray-300);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.ticket-type__info h3 {
+    font-size: 1.125rem;
+    font-weight: var(--font-weight-semibold);
+    color: var(--gray-900);
+    margin-bottom: var(--space-xs);
+}
+
+.ticket-type__price {
+    font-size: 1rem;
+    color: var(--gray-600);
+    margin: 0;
+}
+
+.ticket-type__controls {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+}
+
+.ticket-btn {
+    width: 36px;
+    height: 36px;
+    border: 1px solid var(--gray-300);
+    background: var(--primary-white);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 1.25rem;
+    font-weight: var(--font-weight-semibold);
+    color: var(--gray-600);
+    transition: var(--transition-normal);
+}
+
+.ticket-btn:hover {
+    border-color: var(--gray-400);
+    color: var(--gray-900);
+}
+
+.ticket-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.ticket-quantity {
+    font-size: 1.125rem;
+    font-weight: var(--font-weight-semibold);
+    color: var(--gray-900);
+    min-width: 24px;
+    text-align: center;
+}
+
+/* Booking Total */
+.booking-total {
+    border-top: 1px solid var(--gray-200);
+    padding-top: var(--space-xl);
+}
+
+.total-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space-xl);
+}
+
+.total-label {
+    font-size: 1.25rem;
+    font-weight: var(--font-weight-semibold);
+    color: var(--gray-900);
+}
+
+.total-amount {
+    font-size: 1.5rem;
+    font-weight: var(--font-weight-bold);
+    color: var(--gray-900);
+}
+
+.btn-proceed,
+.btn-complete {
+    width: 100%;
+    background: var(--gray-900);
+    color: var(--primary-white);
+    border: none;
+    padding: var(--space-lg) var(--space-xl);
+    font-size: 1.125rem;
+    font-weight: var(--font-weight-semibold);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: var(--transition-normal);
+}
+
+.btn-proceed:hover,
+.btn-complete:hover {
+    background: var(--gray-800);
+    transform: translateY(-2px);
+}
+
+.btn-proceed:disabled {
+    background: var(--gray-400);
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* Event Summary */
+.booking-right {
+    position: sticky;
+    top: 140px;
+    height: fit-content;
+}
+
+.event-summary {
+    background: var(--primary-white);
+    border: 1px solid var(--gray-200);
+    border-radius: 16px;
+    padding: var(--space-xl);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.event-summary__image {
+    width: 100%;
+    height: 200px;
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: var(--space-lg);
+}
+
+.event-summary__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+
+.event-summary__title {
+    font-size: 1.25rem;
+    font-weight: var(--font-weight-bold);
+    color: var(--gray-900);
+    margin-bottom: var(--space-sm);
+}
+
+.event-summary__date,
+.event-summary__location {
+    font-size: 0.9rem;
+    color: var(--gray-600);
+    margin-bottom: var(--space-xs);
+}
+
+/* Payment Styles */
+.payment-options {
+    margin-bottom: var(--space-2xl);
+}
+
+.payment-method {
+    margin-bottom: var(--space-lg);
+}
+
+.payment-method input[type="radio"] {
+    display: none;
+}
+
+.payment-label {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    padding: var(--space-lg);
+    border: 2px solid var(--gray-200);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: var(--transition-normal);
+    font-weight: var(--font-weight-medium);
+    color: var(--gray-700);
+}
+
+.payment-method input[type="radio"]:checked + .payment-label {
+    border-color: var(--gray-900);
+    background: var(--gray-50);
+    color: var(--gray-900);
+}
+
+.payment-icon {
+    font-size: 1.25rem;
+}
+
+/* Payment Form */
+.payment-form {
+    margin-top: var(--space-xl);
+}
+
+.form-group {
+    margin-bottom: var(--space-lg);
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-lg);
+}
+
+.form-label {
+    display: block;
+    font-size: 0.9rem;
+    font-weight: var(--font-weight-medium);
+    color: var(--gray-700);
+    margin-bottom: var(--space-sm);
+}
+
+.form-input {
+    width: 100%;
+    padding: var(--space-md);
+    border: 1px solid var(--gray-300);
+    border-radius: 6px;
+    font-size: 1rem;
+    color: var(--gray-900);
+    background: var(--primary-white);
+    transition: var(--transition-normal);
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: var(--gray-900);
+    box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
+}
+
+.form-input::placeholder {
+    color: var(--gray-400);
+}
+
+/* Purchase Summary */
+.purchase-summary {
+    margin-top: var(--space-xl);
+    padding-top: var(--space-lg);
+    border-top: 1px solid var(--gray-200);
+}
+
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space-md);
+    font-size: 0.9rem;
+    color: var(--gray-600);
+}
+
+.summary-details {
+    display: flex;
+    gap: var(--space-sm);
+}
+
+.summary-total {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: var(--space-lg);
+    padding-top: var(--space-lg);
+    border-top: 1px solid var(--gray-200);
+    font-size: 1.125rem;
+    font-weight: var(--font-weight-bold);
+    color: var(--gray-900);
+}
+
+/* Completion Styles */
+.completion-message {
+    text-align: center;
+    margin-bottom: var(--space-3xl);
+    padding: var(--space-2xl) 0;
+}
+
+.completion-icon {
+    font-size: 4rem;
+    margin-bottom: var(--space-lg);
+}
+
+.completion-title {
+    font-size: 1.5rem;
+    font-weight: var(--font-weight-bold);
+    color: var(--gray-900);
+    margin-bottom: var(--space-md);
+}
+
+.completion-text {
+    font-size: 1rem;
+    color: var(--gray-600);
+    margin: 0;
+}
+
+.email-form {
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .booking-content {
+        grid-template-columns: 1fr;
+        gap: var(--space-2xl);
+    }
+    
+    .booking-left {
+        padding-right: 0;
+    }
+    
+    .booking-right {
+        position: static;
+        order: -1;
+    }
+    
+    .event-summary {
+        margin-bottom: var(--space-xl);
+    }
+    
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+    
+    .ticket-type {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--space-lg);
+    }
+    
+    .ticket-type__controls {
+        align-self: flex-end;
+    }
+}

@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Tickets - Blankrooms</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/user-dashboard.css">
+</head>
+<body>
+    <div class="dashboard-page">
+        <!-- Header -->
+        <header class="header">
+            <nav class="nav container">
+                <div class="nav__brand">
+                    <a href="index.html" class="nav__logo">
+                        <img src="public/logo.jpg" alt="Blankrooms Logo" class="nav__logo-img">
+                        <span class="nav__brand-text">BLANKROOMS</span>
+                    </a>
+                </div>
+                <ul class="nav__menu">
+                    <li class="nav__item">
+                        <a href="events.html" class="nav__link">Events</a>
+                    </li>
+                    <li class="nav__item">
+                        <a href="#" class="nav__link">Videos</a>
+                    </li>
+                    <li class="nav__item">
+                        <a href="#" class="nav__link">Playlists</a>
+                    </li>
+                </ul>
+                <div class="nav__auth">
+                    <!-- Will be populated by auth.js -->
+                </div>
+            </nav>
+        </header>
+
+        <!-- Main Content -->
+        <main class="dashboard-main">
+            <div class="container">
+                <!-- Welcome Section -->
+                <section class="welcome-section">
+                    <div class="welcome-content">
+                        <h1 class="welcome-title" id="welcomeTitle">Welcome back!</h1>
+                        <p class="welcome-subtitle">Here are your upcoming events and tickets</p>
+                    </div>
+                    <div class="welcome-actions">
+                        <a href="events.html" class="btn-primary">Browse Events</a>
+                    </div>
+                </section>
+
+                <!-- Tickets Section -->
+                <section class="tickets-section">
+                    <div class="section-header">
+                        <h2 class="section-title">My Tickets</h2>
+                        <div class="section-filters">
+                            <button class="filter-btn filter-btn--active" data-filter="all">All</button>
+                            <button class="filter-btn" data-filter="upcoming">Upcoming</button>
+                            <button class="filter-btn" data-filter="past">Past</button>
+                        </div>
+                    </div>
+
+                    <div class="tickets-grid" id="ticketsGrid">
+                        <!-- Tickets will be populated by JavaScript -->
+                    </div>
+
+                    <div class="empty-state" id="emptyState" style="display: none;">
+                        <div class="empty-state__icon">🎫</div>
+                        <h3 class="empty-state__title">No tickets found</h3>
+                        <p class="empty-state__text">You haven't purchased any tickets yet. Browse events to get started!</p>
+                        <a href="events.html" class="btn-primary">Browse Events</a>
+                    </div>
+                </section>
+
+                <!-- QR Code Modal -->
+                <div class="modal" id="qrModal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3 class="modal-title">Your Ticket</h3>
+                            <button class="modal-close" id="closeQrModal">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="ticket-qr">
+                                <div class="qr-code" id="qrCodeContainer">
+                                    <!-- QR code will be generated here -->
+                                </div>
+                                <div class="ticket-info">
+                                    <h4 id="qrEventTitle">Event Title</h4>
+                                    <p id="qrEventDate">Event Date</p>
+                                    <p id="qrTicketType">Ticket Type</p>
+                                    <p class="qr-code-text" id="qrCodeText">QR_CODE_HERE</p>
+                                </div>
+                            </div>
+                            <div class="qr-instructions">
+                                <p>Present this QR code at the event entrance for admission.</p>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn-secondary" id="downloadTicket">Download Ticket</button>
+                            <button class="btn-primary" id="shareTicket">Share</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        // Load QR Code library with multiple fallbacks
+        function loadQRCodeLibrary() {
+            return new Promise((resolve, reject) => {
+                const sources = [
+                    'https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js',
+                    'https://unpkg.com/qrcode@1.5.3/build/qrcode.min.js',
+                    'https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js'
+                ];
+                
+                let currentSource = 0;
+                
+                function tryLoad() {
+                    if (currentSource >= sources.length) {
+                        reject(new Error('All QR code sources failed'));
+                        return;
+                    }
+                    
+                    const script = document.createElement('script');
+                    script.src = sources[currentSource];
+                    script.onload = () => {
+                        console.log(`QR Code library loaded from: ${sources[currentSource]}`);
+                        resolve();
+                    };
+                    script.onerror = () => {
+                        console.warn(`Failed to load QR library from: ${sources[currentSource]}`);
+                        currentSource++;
+                        tryLoad();
+                    };
+                    document.head.appendChild(script);
+                }
+                
+                tryLoad();
+            });
+        }
+        
+        // Start loading immediately
+        loadQRCodeLibrary().catch(error => {
+            console.error('All QR code libraries failed to load:', error);
+            window.QRCodeLibraryFailed = true;
+        });
+    </script>
+    <script src="scripts/qr-generator.js"></script>
+    <script src="scripts/auth.js"></script>
+    <script src="scripts/event-data.js"></script>
+    <script src="scripts/user-dashboard.js"></script>
+</body>
+</html>

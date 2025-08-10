@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Details - Blank Rooms</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/event-detail.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Header Navigation -->
+    <header class="header header--transparent">
+        <nav class="nav">
+            <div class="nav__logo">
+                <img src="public/logo.jpg" alt="Blank Rooms Logo" class="nav__logo-img">
+                <span class="nav__logo-text">BLANK<br>ROOMS</span>
+            </div>
+            
+            <ul class="nav__menu">
+                <li class="nav__item">
+                    <a href="events.html" class="nav__link nav__link--active">Events</a>
+                </li>
+                <li class="nav__item">
+                    <a href="#videos" class="nav__link">Videos</a>
+                </li>
+                <li class="nav__item">
+                    <a href="#playlists" class="nav__link">Playlists</a>
+                </li>
+            </ul>
+            
+            <div class="nav__auth">
+                <a href="signin.html" class="nav__signin">Sign in</a>
+                <a href="signup.html" class="nav__signup">
+                    Sign up
+                    <svg class="nav__signup-arrow" width="16" height="16" viewBox="0 0 16 16">
+                        <path fill="currentColor" d="M8.293 10.293a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L9 8.172V3a1 1 0 00-2 0v5.172L4.707 5.879a1 1 0 00-1.414 1.414l3 3z"/>
+                    </svg>
+                </a>
+            </div>
+            
+            <!-- Mobile Menu Toggle -->
+            <button class="nav__toggle" aria-label="Toggle menu">
+                <span class="nav__toggle-line"></span>
+                <span class="nav__toggle-line"></span>
+                <span class="nav__toggle-line"></span>
+            </button>
+        </nav>
+    </header>
+
+    <!-- Event Detail Page -->
+    <main class="event-detail-page">
+        <!-- Hero Section -->
+        <section class="event-hero">
+            <div class="event-hero__background">
+                <img src="https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=1200&h=800&fit=crop&auto=format&q=80" alt="Event Image" class="event-hero__img" id="eventImage">
+                <div class="event-hero__overlay"></div>
+            </div>
+            
+            <div class="event-hero__content">
+                <h1 class="event-hero__title" id="eventTitle">Shang-Chi</h1>
+                <div class="event-hero__meta">
+                    <span class="event-hero__date" id="eventDate">3 March 2025</span>
+                    <span class="event-hero__location" id="eventLocation">Newcastle, UK</span>
+                </div>
+                <button class="event-hero__cta" id="getTicketsBtn">Get tickets</button>
+            </div>
+        </section>
+
+        <!-- Event Information -->
+        <section class="event-info">
+            <div class="event-info__container">
+                <div class="event-info__content">
+                    <div class="event-info__description">
+                        <p class="event-info__text" id="eventDescription">
+                            Experience an incredible martial arts and action-packed entertainment event featuring live performances, interactive experiences, and multi-genre entertainment.
+                        </p>
+                        <p class="event-info__additional">
+                            Octopuses humming. David, the Octopus. Show me your tentacles. All of them. The sub did not explode, and the fireworks may have been a tactical mistake. The mood is electric. He's going to turn us into monsters. Let's see how everyone loves you when you're the monster.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Booking Modal -->
+    <div class="modal" id="bookingModal">
+        <div class="modal__backdrop"></div>
+        <div class="modal__content">
+            <button class="modal__close" aria-label="Close modal">&times;</button>
+            <div class="booking-form">
+                <h2 class="booking-form__title">Book Your Ticket</h2>
+                <form class="booking-form__form" id="bookingForm">
+                    <div class="form-group">
+                        <label for="fullName" class="form-label">Full Name</label>
+                        <input type="text" id="fullName" name="fullName" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email" class="form-label">Email Address</label>
+                        <input type="email" id="email" name="email" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="phone" class="form-label">Phone Number</label>
+                        <input type="tel" id="phone" name="phone" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="tickets" class="form-label">Number of Tickets</label>
+                        <select id="tickets" name="tickets" class="form-select" required>
+                            <option value="1">1 Ticket</option>
+                            <option value="2">2 Tickets</option>
+                            <option value="3">3 Tickets</option>
+                            <option value="4">4 Tickets</option>
+                            <option value="5">5 Tickets</option>
+                        </select>
+                    </div>
+                    <div class="booking-summary">
+                        <div class="summary-row">
+                            <span>Event:</span>
+                            <span class="summary-event"></span>
+                        </div>
+                        <div class="summary-row">
+                            <span>Date:</span>
+                            <span class="summary-date"></span>
+                        </div>
+                        <div class="summary-row">
+                            <span>Tickets:</span>
+                            <span class="summary-tickets">1</span>
+                        </div>
+                        <div class="summary-row summary-total">
+                            <span>Total:</span>
+                            <span class="summary-price">£25.00</span>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-confirm-booking">Confirm Booking</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div class="modal" id="successModal">
+        <div class="modal__backdrop"></div>
+        <div class="modal__content">
+            <div class="success-message">
+                <div class="success-icon">✓</div>
+                <h2 class="success-title">Booking Confirmed!</h2>
+                <p class="success-text">Your ticket has been booked successfully. A QR code has been sent to your email address.</p>
+                <div class="qr-code-preview">
+                    <canvas id="qrCodeCanvas" width="200" height="200"></canvas>
+                </div>
+                <button class="btn-close-success">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="scripts/event-data.js"></script>
+    <script src="scripts/main.js"></script>
+    <script src="scripts/event-detail.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+</body>
+</html>

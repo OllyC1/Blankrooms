@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Tickets - Blankrooms</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/booking.css">
+</head>
+<body>
+    <div class="booking-page">
+        <!-- Header -->
+        <header class="header">
+            <nav class="nav container">
+                <div class="nav__brand">
+                    <a href="index.html" class="nav__logo">
+                        <img src="public/logo.jpg" alt="Blankrooms Logo" class="nav__logo-img">
+                        <span class="nav__brand-text">BLANKROOMS</span>
+                    </a>
+                </div>
+                <ul class="nav__menu">
+                    <li class="nav__item">
+                        <a href="events.html" class="nav__link nav__link--active">Events</a>
+                    </li>
+                    <li class="nav__item">
+                        <a href="#" class="nav__link">Videos</a>
+                    </li>
+                    <li class="nav__item">
+                        <a href="#" class="nav__link">Playlists</a>
+                    </li>
+                </ul>
+                <div class="nav__auth">
+                    <a href="signin.html" class="nav__signin">Sign in</a>
+                    <a href="signup.html" class="nav__signup">Sign up</a>
+                </div>
+            </nav>
+        </header>
+
+        <!-- Main Content -->
+        <main class="booking-main">
+            <div class="container">
+                <!-- Step 1: Add Tickets -->
+                <section class="booking-step" id="step-tickets">
+                    <div class="booking-content">
+                        <div class="booking-left">
+                            <h1 class="booking-title">Add Tickets</h1>
+                            
+                            <div class="ticket-options">
+                                <!-- Early Access Ticket -->
+                                <div class="ticket-type" data-ticket-type="early">
+                                    <div class="ticket-type__info">
+                                        <h3 class="ticket-type__name">Early Access</h3>
+                                        <p class="ticket-type__price" id="earlyPrice">£40</p>
+                                    </div>
+                                    <div class="ticket-type__controls">
+                                        <button class="ticket-btn ticket-btn--minus" data-action="decrease" data-ticket="early">-</button>
+                                        <span class="ticket-quantity" id="earlyQuantity">0</span>
+                                        <button class="ticket-btn ticket-btn--plus" data-action="increase" data-ticket="early">+</button>
+                                    </div>
+                                </div>
+
+                                <!-- VIP Access Ticket -->
+                                <div class="ticket-type" data-ticket-type="vip">
+                                    <div class="ticket-type__info">
+                                        <h3 class="ticket-type__name">VIP Access</h3>
+                                        <p class="ticket-type__price" id="vipPrice">£80</p>
+                                    </div>
+                                    <div class="ticket-type__controls">
+                                        <button class="ticket-btn ticket-btn--minus" data-action="decrease" data-ticket="vip">-</button>
+                                        <span class="ticket-quantity" id="vipQuantity">0</span>
+                                        <button class="ticket-btn ticket-btn--plus" data-action="increase" data-ticket="vip">+</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="booking-total">
+                                <div class="total-row">
+                                    <span class="total-label">Total</span>
+                                    <span class="total-amount" id="totalAmount">£0</span>
+                                </div>
+                                <button class="btn-proceed" id="proceedToPayment" disabled>Proceed to Payment</button>
+                            </div>
+                        </div>
+
+                        <div class="booking-right">
+                            <div class="event-summary">
+                                <div class="event-summary__image">
+                                    <img src="" alt="Event Image" class="event-summary__img" id="summaryEventImage">
+                                </div>
+                                <div class="event-summary__info">
+                                    <h3 class="event-summary__title" id="summaryEventTitle">Event Title</h3>
+                                    <p class="event-summary__date" id="summaryEventDate">Date</p>
+                                    <p class="event-summary__location" id="summaryEventLocation">Location</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Step 2: Purchase -->
+                <section class="booking-step hidden" id="step-purchase">
+                    <div class="booking-content">
+                        <div class="booking-left">
+                            <h1 class="booking-title">Purchase</h1>
+                            
+                            <div class="payment-options">
+                                <div class="payment-method">
+                                    <input type="radio" id="applePay" name="payment" value="apple" checked>
+                                    <label for="applePay" class="payment-label">
+                                        <span class="payment-icon">📱</span>
+                                        Apple Pay
+                                    </label>
+                                </div>
+                                <div class="payment-method">
+                                    <input type="radio" id="creditCard" name="payment" value="card">
+                                    <label for="creditCard" class="payment-label">
+                                        Credit or debit card
+                                    </label>
+                                </div>
+                            </div>
+
+                            <form class="payment-form" id="paymentForm">
+                                <div class="form-group">
+                                    <label for="cardNumber" class="form-label">Card Number</label>
+                                    <input type="text" id="cardNumber" class="form-input" placeholder="1234 5678 9012 3456">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="cardName" class="form-label">Name on Card</label>
+                                    <input type="text" id="cardName" class="form-input" placeholder="John Doe">
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="cardExpiry" class="form-label">Expires</label>
+                                        <input type="text" id="cardExpiry" class="form-input" placeholder="MM/YY">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="cardCVC" class="form-label">CVC</label>
+                                        <input type="text" id="cardCVC" class="form-input" placeholder="123">
+                                    </div>
+                                </div>
+
+                                <button type="submit" class="btn-complete" id="completePayment">Complete</button>
+                            </form>
+                        </div>
+
+                        <div class="booking-right">
+                            <div class="event-summary">
+                                <div class="event-summary__image">
+                                    <img src="" alt="Event Image" class="event-summary__img" id="purchaseEventImage">
+                                </div>
+                                <div class="event-summary__info">
+                                    <h3 class="event-summary__title" id="purchaseEventTitle">Event Title</h3>
+                                    <p class="event-summary__date" id="purchaseEventDate">Date</p>
+                                    <p class="event-summary__location" id="purchaseEventLocation">Location</p>
+                                </div>
+                                <div class="purchase-summary">
+                                    <div class="summary-row" id="earlySummaryRow" style="display: none;">
+                                        <span>Early Access</span>
+                                        <div class="summary-details">
+                                            <span id="earlySummaryQty">0</span>
+                                            <span id="earlySummaryPrice">£0</span>
+                                        </div>
+                                    </div>
+                                    <div class="summary-row" id="vipSummaryRow" style="display: none;">
+                                        <span>VIP Access</span>
+                                        <div class="summary-details">
+                                            <span id="vipSummaryQty">0</span>
+                                            <span id="vipSummaryPrice">£0</span>
+                                        </div>
+                                    </div>
+                                    <div class="summary-total">
+                                        <span>Total</span>
+                                        <span id="purchaseTotalAmount">£0</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Step 3: Completion -->
+                <section class="booking-step hidden" id="step-completion">
+                    <div class="booking-content">
+                        <div class="booking-left">
+                            <h1 class="booking-title">Purchase</h1>
+                            
+                            <div class="completion-message">
+                                <div class="completion-icon">✅</div>
+                                <h2 class="completion-title">Purchase Successful!</h2>
+                                <p class="completion-text">Your tickets have been confirmed.</p>
+                            </div>
+
+                            <form class="email-form" id="emailForm">
+                                <div class="form-group">
+                                    <label for="emailAddress" class="form-label">Email</label>
+                                    <input type="email" id="emailAddress" class="form-input" placeholder="your@email.com" required>
+                                </div>
+                                <button type="submit" class="btn-complete" id="sendTickets">Complete</button>
+                            </form>
+                        </div>
+
+                        <div class="booking-right">
+                            <div class="event-summary">
+                                <div class="event-summary__image">
+                                    <img src="" alt="Event Image" class="event-summary__img" id="completionEventImage">
+                                </div>
+                                <div class="event-summary__info">
+                                    <h3 class="event-summary__title" id="completionEventTitle">Event Title</h3>
+                                    <p class="event-summary__date" id="completionEventDate">Date</p>
+                                    <p class="event-summary__location" id="completionEventLocation">Location</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="scripts/event-data.js"></script>
+    <script src="scripts/booking.js"></script>
+</body>
+</html>
