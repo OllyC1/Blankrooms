@@ -9,6 +9,7 @@ class SimpleAuth {
   async init() {
     await this.loadStoredAuth();
     this.updateUI();
+    console.log('Auth init complete. User:', this.user, 'Token:', !!this.token);
   }
 
   async loadStoredAuth() {
@@ -179,13 +180,17 @@ class SimpleAuth {
   }
 
   requireAdmin() {
+    console.log('RequireAdmin check - User:', this.user, 'Token:', !!this.token, 'IsAuth:', this.isAuthenticated());
+    
     if (!this.requireAuth()) return false;
     
     if (!this.isAdmin()) {
+      console.log('User is not admin:', this.user?.role);
       alert('Admin access required');
       window.location.href = '/user-dashboard.html';
       return false;
     }
+    console.log('Admin access granted');
     return true;
   }
 

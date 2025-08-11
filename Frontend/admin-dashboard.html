@@ -316,11 +316,17 @@
     <script>
         // Simple admin protection
         window.addEventListener('DOMContentLoaded', async () => {
+            console.log('DOMContentLoaded: Starting auth init...');
             await window.auth.init();
+            console.log('DOMContentLoaded: Auth init complete, checking admin access...');
             if (!window.auth.requireAdmin()) {
+                console.log('DOMContentLoaded: Admin check failed, will redirect');
                 return; // Will redirect automatically
             }
-            console.log('Admin access granted');
+            console.log('DOMContentLoaded: Admin access granted, initializing dashboard...');
+            
+            // Initialize dashboard after authentication is confirmed
+            window.adminDashboard = new AdminDashboard();
         });
     </script>
     <script src="scripts/admin-dashboard.js"></script>

@@ -1,5 +1,6 @@
 class AdminDashboard {
   constructor() {
+    console.log('AdminDashboard constructor called');
     this.sections = {
       overview: document.getElementById('overview-section'),
       events: document.getElementById('events-section'),
@@ -15,14 +16,13 @@ class AdminDashboard {
     this.populateTables();
     this.bindAddEdit();
     this.bindScanner();
-    this.ensureAdmin();
+    this.setAdminInfo();
   }
 
-  ensureAdmin() {
-    if (!window.auth.isAuthenticated() || !window.auth.hasRole('admin')) {
-      window.location.href = 'signin.html?redirect=' + encodeURIComponent('admin-dashboard.html');
-    } else {
-      const user = window.auth.getUser();
+  setAdminInfo() {
+    // Admin authentication is already checked in DOMContentLoaded, just set the name
+    const user = window.auth.getCurrentUser();
+    if (user && user.name) {
       document.getElementById('adminName').textContent = user.name;
     }
   }
@@ -356,6 +356,4 @@ class AdminDashboard {
   }
 }
 
-window.addEventListener('DOMContentLoaded', () => {
-  new AdminDashboard();
-});
+// Dashboard initialization is now handled in the HTML file after authentication
