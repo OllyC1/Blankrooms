@@ -17,10 +17,13 @@
     "responsive",
     "modern"
   ],
-  "author": "Blank Rooms Team",
+  "author": "Ibrahim Olayemi Oladipo",
   "license": "MIT",
   "devDependencies": {
     "http-server": "^14.1.1"
+  },
+  "dependencies": {
+    "mongodb": "^5.9.0"
   },
   "engines": {
     "node": ">=14.0.0"

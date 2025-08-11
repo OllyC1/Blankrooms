@@ -118,9 +118,21 @@ class EventManager {
         const container = document.querySelector('.events-grid');
         if (!container) return;
 
-        const events = (typeof EventUtils !== 'undefined' && EventUtils.getAllEvents)
-            ? EventUtils.getAllEvents()
-            : Object.values(window.EVENTS_DATA || {});
+        const fetchFromApi = async () => {
+            try {
+                const res = await fetch('/api/events', { cache: 'no-store' });
+                if (!res.ok) throw new Error('api failed');
+                return await res.json();
+            } catch {
+                // fallback to in-memory data
+                return (typeof EventUtils !== 'undefined' && EventUtils.getAllEvents)
+                    ? EventUtils.getAllEvents()
+                    : Object.values(window.EVENTS_DATA || {});
+            }
+        };
+
+        const events = window.__events_cache || await fetchFromApi();
+        window.__events_cache = events;
 
         // Sort by date ascending
         const sorted = events.slice().sort((a, b) => new Date(a.date) - new Date(b.date));
