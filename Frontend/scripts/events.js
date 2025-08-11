@@ -122,7 +122,12 @@ class EventManager {
             try {
                 const res = await fetch('/api/events', { cache: 'no-store' });
                 if (!res.ok) throw new Error('api failed');
-                return await res.json();
+                const apiEvents = await res.json();
+                // Normalize MongoDB _id to id for consistency
+                return apiEvents.map(e => ({
+                    ...e,
+                    id: e._id || e.id
+                }));
             } catch {
                 // fallback to in-memory data
                 return (typeof EventUtils !== 'undefined' && EventUtils.getAllEvents)

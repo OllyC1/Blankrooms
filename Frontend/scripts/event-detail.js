@@ -25,24 +25,56 @@ class EventDetailPage {
         this.initScrollEffects();
     }
 
-    loadEventFromURL() {
+    async loadEventFromURL() {
         // Get event ID from URL parameters
         const urlParams = new URLSearchParams(window.location.search);
         const eventId = urlParams.get('id');
         
         console.log('URL Event ID:', eventId);
-        console.log('Available events:', EVENTS_DATA);
         
-        if (eventId && EventUtils.getEventById(eventId)) {
-            this.currentEvent = EventUtils.getEventById(eventId);
-            console.log('Loaded event from URL:', this.currentEvent);
-            this.populateEventData();
-        } else {
-            // Default to first event if no ID provided
-            console.log('No valid event ID, defaulting to event 1');
-            this.currentEvent = EventUtils.getEventById(1);
-            console.log('Default event:', this.currentEvent);
-            this.populateEventData();
+        try {
+            // Load events from API first
+            const res = await fetch('/api/events', { cache: 'no-store' });
+            let events = [];
+            
+            if (res.ok) {
+                const apiEvents = await res.json();
+                // Normalize MongoDB _id to id for consistency
+                events = apiEvents.map(e => ({
+                    ...e,
+                    id: e._id || e.id
+                }));
+            } else {
+                // Fallback to static data
+                events = EVENTS_DATA ? Object.values(EVENTS_DATA) : [];
+            }
+            
+            console.log('Available events:', events);
+            
+            if (eventId) {
+                this.currentEvent = events.find(e => String(e.id) === String(eventId));
+            }
+            
+            if (!this.currentEvent && events.length > 0) {
+                // Default to first event if no ID provided or event not found
+                this.currentEvent = events[0];
+                console.log('Defaulting to first event:', this.currentEvent);
+            }
+            
+            if (this.currentEvent) {
+                console.log('Loaded event:', this.currentEvent);
+                this.populateEventData();
+            } else {
+                console.error('No events found');
+                document.querySelector('.event-hero__title').textContent = 'Event Not Found';
+            }
+        } catch (error) {
+            console.error('Error loading event:', error);
+            // Fallback to static data
+            if (eventId && EventUtils.getEventById(eventId)) {
+                this.currentEvent = EventUtils.getEventById(eventId);
+                this.populateEventData();
+            }
         }
     }
 

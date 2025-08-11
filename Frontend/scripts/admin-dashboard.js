@@ -103,8 +103,15 @@ class AdminDashboard {
     const tbody = document.getElementById('eventsTableBody');
     let events = [];
     try {
-      events = await window.adminApi.fetchEvents();
-    } catch {
+      const apiEvents = await window.adminApi.fetchEvents();
+      // Normalize MongoDB _id to id for consistency
+      events = apiEvents.map(e => ({
+        ...e,
+        id: e._id || e.id
+      }));
+      console.log('Loaded events from API:', events);
+    } catch (err) {
+      console.log('API failed, using fallback:', err);
       events = window.adminStore ? window.adminStore.getEvents() : (EVENTS_DATA ? Object.values(EVENTS_DATA) : []);
     }
     tbody.innerHTML = events.map(e => `
@@ -253,9 +260,18 @@ class AdminDashboard {
       }
 
       try {
-        if (event && (event._id || event.id)) { await window.adminApi.updateEvent(event._id || event.id, normalized); }
-        else { await window.adminApi.createEvent(normalized); }
+        console.log('Saving event data:', normalized);
+        if (event && (event._id || event.id)) { 
+          const result = await window.adminApi.updateEvent(event._id || event.id, normalized); 
+          console.log('Event updated:', result);
+        } else { 
+          const result = await window.adminApi.createEvent(normalized); 
+          console.log('Event created:', result);
+        }
+        alert('Event saved successfully!');
       } catch (apiErr) {
+        console.error('API error:', apiErr);
+        alert('Error saving event: ' + apiErr.message);
         // Fallback to local store if API not available
         if (event) { window.adminStore.updateEvent(event.id, normalized); }
         else { window.adminStore.addEvent(normalized); }
