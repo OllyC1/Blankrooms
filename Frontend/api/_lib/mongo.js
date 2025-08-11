@@ -39,8 +39,9 @@ async function getDb() {
       cached.client = client;
     }
     
-    const dbName = process.env.MONGODB_DB || 'blankrooms';
+    const dbName = process.env.MONGODB_DB || 'Blankrooms';
     console.log('Using database:', dbName);
+    console.log('Available env vars:', Object.keys(process.env).filter(k => k.includes('MONGO')));
     const db = client.db(dbName);
     cached.db = db;
     return db;
