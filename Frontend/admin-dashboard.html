@@ -312,7 +312,17 @@
     <script src="scripts/qr-generator.js"></script>
     <script src="scripts/admin-api.js"></script>
     <script src="scripts/qr-scanner.js"></script>
-    <script src="scripts/auth.js"></script>
+    <script src="scripts/simple-auth.js"></script>
+    <script>
+        // Simple admin protection
+        window.addEventListener('DOMContentLoaded', async () => {
+            await window.auth.init();
+            if (!window.auth.requireAdmin()) {
+                return; // Will redirect automatically
+            }
+            console.log('Admin access granted');
+        });
+    </script>
     <script src="scripts/admin-dashboard.js"></script>
 </body>
 </html>

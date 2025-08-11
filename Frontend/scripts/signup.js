@@ -219,11 +219,12 @@ class SignUpManager {
                 password: formData.get('password')
             };
             
-            // Use secure auth API
-            const result = await window.secureAuth.signUp(userData.name, userData.email, userData.password);
+            // Use simple auth
+            const result = await window.auth.signUp(userData.name, userData.email, userData.password);
             
             // Success - redirect to appropriate dashboard
-            this.handleSignUpSuccess(result);
+            console.log('Signup successful, redirecting to dashboard');
+            window.location.href = window.auth.getDashboardUrl();
             
         } catch (error) {
             console.error('Sign up error:', error);

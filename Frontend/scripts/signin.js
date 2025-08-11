@@ -199,12 +199,12 @@ class SignInManager {
             const password = formData.get('password');
             const rememberMe = formData.get('rememberMe') === 'on';
 
-            // Use secure auth API
-            const result = await window.secureAuth.signIn(email, password, rememberMe);
+            // Use simple auth
+            const result = await window.auth.signIn(email, password, rememberMe);
             
-            if (result.success) {
-                this.handleSignInSuccess(result);
-            }
+            // Direct redirect to appropriate dashboard
+            console.log('Signin successful, redirecting to dashboard');
+            window.location.href = window.auth.getDashboardUrl();
             
         } catch (error) {
             console.error('Sign in error:', error);
@@ -234,14 +234,7 @@ class SignInManager {
         }
     }
 
-    handleSignInSuccess(result) {
-        const { user } = result;
-        
-        console.log('Signin successful, redirecting to:', result.redirectUrl);
-        
-        // Redirect immediately - no delays or messages to avoid loops
-        window.location.replace(result.redirectUrl);
-    }
+    // Removed - using direct redirect in handleSubmit now
 
     handleSignInError(error) {
         let message = 'An error occurred during sign in. Please try again.';
