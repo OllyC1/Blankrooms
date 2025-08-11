@@ -4,7 +4,6 @@ class SecureAuthManager {
     this.storageKey = 'blankrooms_token';
     this.user = null;
     this.token = null;
-    this.isRedirecting = false; // Prevent redirect loops
     // Don't auto-init to avoid race conditions
   }
 
@@ -197,12 +196,6 @@ class SecureAuthManager {
 
   // Protected route checking
   checkRoutePermissions() {
-    // Prevent redirect loops
-    if (this.isRedirecting) {
-      console.log('Already redirecting, skipping route check');
-      return false;
-    }
-
     const path = window.location.pathname;
     const protectedRoutes = {
       '/admin-dashboard.html': 'admin',
@@ -216,37 +209,19 @@ class SecureAuthManager {
       token: !!this.token
     });
 
-    // If user is on signin page and already authenticated, redirect them to appropriate dashboard
-    if (path === '/signin.html' && this.isAuthenticated()) {
-      console.log('User is authenticated but on signin page, redirecting to dashboard');
-      this.isRedirecting = true;
-      const dashboardUrl = this.user.role === 'admin' ? '/admin-dashboard.html' : '/user-dashboard.html';
-      setTimeout(() => {
-        window.location.href = dashboardUrl;
-      }, 100);
-      return false;
-    }
-
     const requiredRole = protectedRoutes[path];
     if (requiredRole) {
       if (!this.isAuthenticated()) {
         console.log('Not authenticated, redirecting to signin');
-        this.isRedirecting = true;
-        // Redirect to sign in
-        setTimeout(() => {
-          window.location.href = '/signin.html?redirect=' + encodeURIComponent(path);
-        }, 100);
+        window.location.href = '/signin.html?redirect=' + encodeURIComponent(path);
         return false;
       }
 
       if (!this.hasRole(requiredRole)) {
         console.log('Insufficient permissions. Required:', requiredRole, 'User role:', this.user?.role);
-        this.isRedirecting = true;
         // Insufficient permissions
         alert('You do not have permission to access this page.');
-        setTimeout(() => {
-          window.location.href = this.user.role === 'admin' ? '/admin-dashboard.html' : '/user-dashboard.html';
-        }, 100);
+        window.location.href = this.user.role === 'admin' ? '/admin-dashboard.html' : '/user-dashboard.html';
         return false;
       }
       
