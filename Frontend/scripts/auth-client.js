@@ -4,7 +4,7 @@ class SecureAuthManager {
     this.storageKey = 'blankrooms_token';
     this.user = null;
     this.token = null;
-    this.init();
+    // Don't auto-init to avoid race conditions
   }
 
   async init() {
@@ -202,20 +202,31 @@ class SecureAuthManager {
       '/user-dashboard.html': 'user'
     };
 
+    console.log('Checking route permissions for:', path);
+    console.log('Auth state:', {
+      isAuthenticated: this.isAuthenticated(),
+      user: this.user,
+      token: !!this.token
+    });
+
     const requiredRole = protectedRoutes[path];
     if (requiredRole) {
       if (!this.isAuthenticated()) {
+        console.log('Not authenticated, redirecting to signin');
         // Redirect to sign in
         window.location.href = '/signin.html?redirect=' + encodeURIComponent(path);
         return false;
       }
 
       if (!this.hasRole(requiredRole)) {
+        console.log('Insufficient permissions. Required:', requiredRole, 'User role:', this.user?.role);
         // Insufficient permissions
         alert('You do not have permission to access this page.');
         window.location.href = this.user.role === 'admin' ? '/admin-dashboard.html' : '/user-dashboard.html';
         return false;
       }
+      
+      console.log('Route access granted for role:', this.user.role);
     }
     return true;
   }
@@ -227,7 +238,10 @@ window.secureAuth = new SecureAuthManager();
 // Backward compatibility
 window.authManager = window.secureAuth;
 
-// Check route permissions on page load
-window.addEventListener('DOMContentLoaded', () => {
+// Check route permissions on page load (after auth is initialized)
+window.addEventListener('DOMContentLoaded', async () => {
+  // Wait for auth to be fully initialized
+  await window.secureAuth.init();
+  // Then check route permissions
   window.secureAuth.checkRoutePermissions();
 });
