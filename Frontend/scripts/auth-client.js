@@ -209,6 +209,14 @@ class SecureAuthManager {
       token: !!this.token
     });
 
+    // If user is on signin page and already authenticated, redirect them to appropriate dashboard
+    if (path === '/signin.html' && this.isAuthenticated()) {
+      console.log('User is authenticated but on signin page, redirecting to dashboard');
+      const dashboardUrl = this.user.role === 'admin' ? '/admin-dashboard.html' : '/user-dashboard.html';
+      window.location.href = dashboardUrl;
+      return false;
+    }
+
     const requiredRole = protectedRoutes[path];
     if (requiredRole) {
       if (!this.isAuthenticated()) {

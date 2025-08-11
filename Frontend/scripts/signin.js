@@ -237,19 +237,16 @@ class SignInManager {
     handleSignInSuccess(result) {
         const { user } = result;
         
-        // Show success message
-        this.showSuccessMessage(`Welcome back, ${user.name}!`);
-        
         // Clear form
         this.form.reset();
         
         // Clear any stored redirect and go directly to result URL
         sessionStorage.removeItem('signin_redirect');
         
-        // Redirect immediately to avoid confusion
-        setTimeout(() => {
-            window.location.href = result.redirectUrl;
-        }, 500);
+        console.log('Signin successful, redirecting to:', result.redirectUrl);
+        
+        // Redirect immediately to dashboard
+        window.location.href = result.redirectUrl;
     }
 
     handleSignInError(error) {
