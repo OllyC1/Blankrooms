@@ -189,7 +189,7 @@ class AdminDashboard {
       return;
     }
     document.getElementById('modalTitle').textContent = event ? 'Edit Event' : 'Add Event';
-    const e = event || { title:'', date:'', location:'', price:0, image:'', description:'', features:[], ticketTypes: [] };
+    const e = event || { title:'', date:'', location:'', image:'', description:'', features:[], ticketTypes: [] };
 
     const body = document.getElementById('modalBody');
     body.innerHTML = `
@@ -198,15 +198,15 @@ class AdminDashboard {
           <label>Title<input type="text" name="title" value="${e.title}" required></label>
           <label>Date<input type="date" name="date" value="${this.parseDateInput(e.date)}" required></label>
           <label>Location<input type="text" name="location" value="${e.location}"></label>
-          <label>Base Price (£)<input type="number" step="0.01" min="0" name="price" value="${e.price || 0}"></label>
           <label>Event Image<input type="file" name="imageFile" accept="image/*"></label>
         </div>
         <label>Description<textarea name="description" rows="4">${e.description || ''}</textarea></label>
         <label>Features (comma-separated)<input type="text" name="features" value="${(e.features||[]).join(', ')}"></label>
-        <div style="margin-top:12px">
+        <div style="margin-top:20px">
           <strong>Ticket Types</strong>
-          <div id="ticketTypes" style="display:flex; flex-direction:column; gap:8px; margin-top:8px"></div>
-          <button type="button" class="btn-secondary" id="addTicketType">+ Add Ticket Type</button>
+          <p style="color: var(--gray-600); font-size: 0.9rem; margin: 4px 0 12px 0;">Add at least one ticket type with name and price</p>
+          <div id="ticketTypes" style="display:flex; flex-direction:column; gap:12px; margin-bottom:12px"></div>
+          <button type="button" class="btn-secondary" id="addTicketType">+ Add Another Ticket Type</button>
         </div>
         <div style="display:flex; gap:10px; justify-content:flex-end; margin-top:16px;">
           <button type="button" class="btn-secondary" id="cancelForm">Cancel</button>
@@ -223,23 +223,36 @@ class AdminDashboard {
       list.forEach((t, idx) => {
         const row = document.createElement('div');
         row.innerHTML = `
-          <div style="display:grid; grid-template-columns: 1fr 140px 100px; gap:8px; align-items:center;">
-            <input type="text" placeholder="Name (e.g., Early Access)" value="${t.name || ''}" data-idx="${idx}" data-key="name">
-            <input type="number" step="0.01" min="0" placeholder="Price" value="${t.price || ''}" data-idx="${idx}" data-key="price">
-            <button type="button" data-remove="${idx}" class="btn-secondary">Remove</button>
+          <div style="display:grid; grid-template-columns: 1fr 140px 80px; gap:12px; align-items:center; padding:12px; background: var(--gray-50); border-radius: 8px; border: 1px solid var(--gray-200);">
+            <input type="text" placeholder="Ticket name (e.g., Early Access, VIP)" value="${t.name || ''}" data-idx="${idx}" data-key="name" style="padding: 8px; border: 1px solid var(--gray-300); border-radius: 4px;">
+            <input type="number" step="0.01" min="0" placeholder="Price (£)" value="${t.price || ''}" data-idx="${idx}" data-key="price" style="padding: 8px; border: 1px solid var(--gray-300); border-radius: 4px;">
+            <button type="button" data-remove="${idx}" class="btn-secondary" style="padding: 6px 12px; font-size: 0.85rem;">Remove</button>
           </div>
         `;
         ticketTypesContainer.appendChild(row);
       });
     };
     let ticketTypes = Array.isArray(e.ticketTypes) ? e.ticketTypes : [];
+    // If no ticket types exist, start with one empty row
+    if (ticketTypes.length === 0) {
+      ticketTypes.push({ name: '', price: '' });
+    }
     renderTicketTypes(ticketTypes);
     document.getElementById('addTicketType').addEventListener('click', () => { ticketTypes.push({ name: '', price: '' }); renderTicketTypes(ticketTypes); });
     ticketTypesContainer.addEventListener('input', (evt) => {
       const target = evt.target;
       const idx = Number(target.getAttribute('data-idx'));
       const key = target.getAttribute('data-key');
-      if (!Number.isNaN(idx) && key) { ticketTypes[idx][key] = key === 'price' ? Number(target.value) : target.value; }
+      
+      if (!Number.isNaN(idx) && key && ticketTypes[idx]) {
+        if (key === 'price') {
+          // Store as string initially, convert to number when saving
+          ticketTypes[idx][key] = target.value;
+        } else {
+          ticketTypes[idx][key] = target.value;
+        }
+        console.log(`Updated ticket ${idx}.${key} to:`, target.value);
+      }
     });
     ticketTypesContainer.addEventListener('click', (evt) => {
       const idx = Number(evt.target.getAttribute('data-remove'));
@@ -253,14 +266,24 @@ class AdminDashboard {
       const fd = new FormData(form);
       const data = Object.fromEntries(fd.entries());
       const features = (data.features || '').split(',').map(s => s.trim()).filter(Boolean);
+      const validTicketTypes = ticketTypes.filter(t => t.name && t.price && !Number.isNaN(Number(t.price))).map(t => ({ 
+        name: t.name.trim(), 
+        price: Number(t.price) 
+      }));
+      
+      // Validate that at least one ticket type is provided
+      if (validTicketTypes.length === 0) {
+        alert('Please add at least one valid ticket type with both name and price.');
+        return;
+      }
+      
       const normalized = {
         title: data.title,
         date: this.formatDateOutput(data.date),
         location: data.location,
-        price: parseFloat(data.price || '0'),
         description: data.description,
         features,
-        ticketTypes: ticketTypes.filter(t => t.name && !Number.isNaN(Number(t.price))).map(t => ({ name: t.name, price: Number(t.price) }))
+        ticketTypes: validTicketTypes
       };
 
       // Upload image if file provided (optional; fallback to keep existing image)
