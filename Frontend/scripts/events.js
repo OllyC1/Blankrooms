@@ -154,8 +154,21 @@ class EventManager {
             </article>
         `).join('');
 
-        // Re-bind listeners to the new cards
-        this.bindEventListeners();
+        // Re-bind listeners to the new cards (use event delegation for reliability)
+        container.addEventListener('click', (e) => {
+            const card = e.target.closest('.event-card');
+            if (!card) return;
+            const quickBtn = e.target.closest('.event-card__quick-book');
+            const eventId = card.dataset.eventId;
+            if (quickBtn) {
+                e.stopPropagation();
+                this.currentEvent = (window.__events_cache || []).find(v => String(v.id) === String(eventId));
+                if (!this.currentEvent) return;
+                this.showBookingForm();
+            } else {
+                this.showEventDetail(eventId);
+            }
+        });
         this.initializeEventCards();
     }
 

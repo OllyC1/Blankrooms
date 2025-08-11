@@ -59,6 +59,11 @@ class AdminDashboard {
     Object.keys(this.sections).forEach(k => {
       if (this.sections[k]) this.sections[k].classList.toggle('hidden', k !== key);
     });
+
+    // When switching to events section, ensure table is populated (and reloaded)
+    if (key === 'events') {
+      this.populateTables();
+    }
   }
 
   populateOverview() {
@@ -93,7 +98,7 @@ class AdminDashboard {
     document.getElementById('recentTickets').innerHTML = recentTickets || '<div>No tickets</div>';
   }
 
-  populateTables() {
+  async populateTables() {
     // Events table (load from API if available)
     const tbody = document.getElementById('eventsTableBody');
     let events = [];
