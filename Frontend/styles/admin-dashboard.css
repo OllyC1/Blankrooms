@@ -220,17 +220,150 @@
 }
 
 /* Admin form */
-.admin-form label { display: block; font-weight: var(--font-weight-medium); color: var(--gray-800); margin-bottom: 10px; }
-.admin-form input, .admin-form textarea, .admin-form select { width: 100%; margin-top: 6px; padding: 10px 12px; border: 1px solid var(--gray-300); border-radius: 8px; }
-.form-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 12px; }
-@media (max-width: 640px) { .form-grid { grid-template-columns: 1fr; } }
+/* Admin Form Styling */
+.admin-form { 
+  display: flex; 
+  flex-direction: column; 
+  gap: 20px;
+}
+
+.admin-form label { 
+  display: block; 
+  font-weight: var(--font-weight-medium); 
+  color: var(--gray-800); 
+  margin-bottom: 6px;
+  font-size: 0.95rem;
+}
+
+.admin-form input, .admin-form textarea, .admin-form select { 
+  width: 100%; 
+  margin-top: 6px; 
+  padding: 12px 14px; 
+  border: 1px solid var(--gray-300); 
+  border-radius: 8px;
+  font-size: 0.95rem;
+  transition: border-color 0.2s ease;
+}
+
+.admin-form input:focus, .admin-form textarea:focus, .admin-form select:focus {
+  outline: none;
+  border-color: var(--primary-blue);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.form-grid { 
+  display: grid; 
+  grid-template-columns: repeat(2, 1fr); 
+  gap: 20px; 
+  margin-bottom: 6px;
+}
+
+.ticket-types-section {
+  background: var(--gray-50);
+  border: 1px solid var(--gray-200);
+  border-radius: 12px;
+  padding: 20px;
+  margin-top: 10px;
+}
+
+.ticket-types-header {
+  margin-bottom: 16px;
+}
+
+.ticket-types-header h4 {
+  margin: 0 0 6px 0;
+  font-weight: var(--font-weight-semibold);
+  color: var(--gray-800);
+}
+
+.ticket-types-header p {
+  margin: 0;
+  color: var(--gray-600);
+  font-size: 0.9rem;
+}
+
+.ticket-type-row {
+  background: var(--primary-white);
+  border: 1px solid var(--gray-200);
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 12px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.ticket-type-inputs {
+  display: grid;
+  grid-template-columns: 1fr 140px 80px;
+  gap: 12px;
+  align-items: end;
+}
+
+.form-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid var(--gray-200);
+}
+
+@media (max-width: 640px) { 
+  .form-grid { grid-template-columns: 1fr; }
+  .ticket-type-inputs { grid-template-columns: 1fr; }
+}
 
 /* Modal (shared for admin) */
-.modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 2000; }
-.modal.show { display: flex; align-items: center; justify-content: center; }
-.modal-content { background: var(--primary-white); border-radius: 12px; width: 95%; max-width: 720px; overflow: hidden; box-shadow: var(--shadow-xl); }
-.modal-header { display: flex; align-items: center; justify-content: space-between; padding: var(--space-xl); border-bottom: 1px solid var(--gray-200); }
-.modal-title { margin: 0; font-weight: var(--font-weight-bold); }
-.modal-close { background: none; border: none; font-size: 2rem; line-height: 1; color: var(--gray-400); cursor: pointer; }
-.modal-close:hover { color: var(--gray-600); }
-.modal-body { padding: var(--space-xl); }
+.modal { 
+  display: none; 
+  position: fixed; 
+  inset: 0; 
+  background: rgba(0,0,0,0.7); 
+  z-index: 2000; 
+  overflow-y: auto;
+  padding: 20px;
+}
+.modal.show { 
+  display: flex; 
+  align-items: flex-start; 
+  justify-content: center; 
+  min-height: 100vh;
+}
+.modal-content { 
+  background: var(--primary-white); 
+  border-radius: 12px; 
+  width: 100%; 
+  max-width: 800px; 
+  margin: auto;
+  box-shadow: var(--shadow-xl); 
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+}
+.modal-header { 
+  display: flex; 
+  align-items: center; 
+  justify-content: space-between; 
+  padding: var(--space-xl); 
+  border-bottom: 1px solid var(--gray-200);
+  flex-shrink: 0;
+}
+.modal-title { 
+  margin: 0; 
+  font-weight: var(--font-weight-bold); 
+}
+.modal-close { 
+  background: none; 
+  border: none; 
+  font-size: 2rem; 
+  line-height: 1; 
+  color: var(--gray-400); 
+  cursor: pointer; 
+}
+.modal-close:hover { 
+  color: var(--gray-600); 
+}
+.modal-body { 
+  padding: var(--space-xl); 
+  overflow-y: auto;
+  flex: 1;
+}
