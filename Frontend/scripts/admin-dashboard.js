@@ -209,7 +209,13 @@ class AdminDashboard {
           </div>
           <div>
             <label for="eventImage">Event Image</label>
-            <input type="file" id="eventImage" name="imageFile" accept="image/*">
+            <input type="file" id="eventImage" name="imageFile" accept="image/png,image/jpeg,image/jpg">
+            <small style="color: var(--gray-600); font-size: 0.85rem; margin-top: 4px; display: block;">
+              Upload PNG or JPEG files (max 5MB)
+            </small>
+            <div id="imagePreview" style="margin-top: 10px; display: none;">
+              <img id="previewImg" style="max-width: 200px; max-height: 120px; border-radius: 8px; border: 1px solid var(--gray-300);">
+            </div>
           </div>
         </div>
         
@@ -310,6 +316,43 @@ class AdminDashboard {
       }
     });
 
+    // Handle image preview
+    document.getElementById('eventImage').addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      const preview = document.getElementById('imagePreview');
+      const previewImg = document.getElementById('previewImg');
+      
+      if (file) {
+        // Validate file type immediately
+        const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg'];
+        if (!allowedTypes.includes(file.type)) {
+          alert('Please select a PNG or JPEG image file.');
+          e.target.value = '';
+          preview.style.display = 'none';
+          return;
+        }
+        
+        // Validate file size
+        const maxSize = 5 * 1024 * 1024; // 5MB
+        if (file.size > maxSize) {
+          alert('Image file is too large. Please choose a file smaller than 5MB.');
+          e.target.value = '';
+          preview.style.display = 'none';
+          return;
+        }
+        
+        // Show preview
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          previewImg.src = event.target.result;
+          preview.style.display = 'block';
+        };
+        reader.readAsDataURL(file);
+      } else {
+        preview.style.display = 'none';
+      }
+    });
+
     document.getElementById('cancelForm').addEventListener('click', () => modal.classList.remove('show'));
     document.getElementById('eventForm').addEventListener('submit', async (ev) => {
       ev.preventDefault();
@@ -337,13 +380,49 @@ class AdminDashboard {
         ticketTypes: validTicketTypes
       };
 
-      // Upload image if file provided (optional; fallback to keep existing image)
+      // Upload image if file provided
       const file = fd.get('imageFile');
+      console.log('Image file selected:', file);
+      
       if (file && file.size > 0) {
+        console.log('File details:', {
+          name: file.name,
+          size: file.size,
+          type: file.type
+        });
+        
+        // Validate file type
+        const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg'];
+        if (!allowedTypes.includes(file.type)) {
+          alert('Please upload a PNG or JPEG image file.');
+          return;
+        }
+        
+        // Validate file size (5MB max)
+        const maxSize = 5 * 1024 * 1024; // 5MB in bytes
+        if (file.size > maxSize) {
+          alert('Image file is too large. Please choose a file smaller than 5MB.');
+          return;
+        }
+        
         try {
+          console.log('Starting image upload...');
           const upload = await this.uploadImageToVercel(file);
-          if (upload?.url) normalized.image = upload.url;
-        } catch (err) { console.warn('Image upload failed', err); }
+          if (upload?.url) {
+            normalized.image = upload.url;
+            console.log('Image uploaded successfully');
+          } else {
+            throw new Error('Upload failed - no URL returned');
+          }
+        } catch (err) { 
+          console.error('Image upload failed:', err);
+          alert('Image upload failed: ' + err.message);
+          return;
+        }
+      } else if (!event) {
+        // For new events, require an image
+        alert('Please select an image for your event.');
+        return;
       }
 
       try {
@@ -371,13 +450,33 @@ class AdminDashboard {
   }
 
   async uploadImageToVercel(file) {
-    // Placeholder for future direct upload integration (Vercel Blob or S3). For now, convert to data URL.
-    // Warning: Data URLs are large; this is for quick demo only. For production, switch to Vercel Blob or S3.
+    // For now, convert to data URL for storage in MongoDB
+    // In production, this would upload to Vercel Blob Storage or AWS S3
     return new Promise((resolve, reject) => {
+      console.log('Converting image to data URL...');
       const reader = new FileReader();
-      reader.onload = () => resolve({ url: reader.result });
-      reader.onerror = reject;
-      reader.readAsDataURL(file);
+      
+      reader.onload = (event) => {
+        const dataUrl = event.target.result;
+        console.log('Image converted successfully, size:', dataUrl.length);
+        resolve({ url: dataUrl });
+      };
+      
+      reader.onerror = (error) => {
+        console.error('FileReader error:', error);
+        reject(new Error('Failed to read image file'));
+      };
+      
+      reader.onabort = () => {
+        reject(new Error('File reading was aborted'));
+      };
+      
+      try {
+        reader.readAsDataURL(file);
+      } catch (error) {
+        console.error('Error starting file read:', error);
+        reject(error);
+      }
     });
   }
 
