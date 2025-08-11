@@ -213,11 +213,17 @@ class SignUpManager {
         this.setLoadingState(true);
 
         try {
-            // Simulate API call
-            await this.simulateSignUp(formData);
+            const userData = {
+                name: formData.get('fullName'),
+                email: formData.get('email'),
+                password: formData.get('password')
+            };
             
-            // Success - redirect or show success message
-            this.handleSignUpSuccess(formData);
+            // Use secure auth API
+            const result = await window.secureAuth.signUp(userData.name, userData.email, userData.password);
+            
+            // Success - redirect to appropriate dashboard
+            this.handleSignUpSuccess(result);
             
         } catch (error) {
             console.error('Sign up error:', error);
@@ -247,27 +253,28 @@ class SignUpManager {
         return { success: true, userId: Date.now() };
     }
 
-    handleSignUpSuccess(formData) {
-        const name = formData.get('fullName');
-        const email = formData.get('email');
-        
+    handleSignUpSuccess(result) {
         // Show success message
-        alert(`Welcome ${name}!\n\nYour account has been created successfully.\nA confirmation email has been sent to ${email}.`);
+        alert(`Welcome ${result.user.name}!\n\nYour account has been created successfully.`);
         
         // Clear form
         this.form.reset();
         
-        // Redirect to events page after a short delay
-        setTimeout(() => {
-            window.location.href = 'events.html';
-        }, 1500);
+        // Redirect to appropriate dashboard immediately
+        window.location.href = result.redirectUrl;
     }
 
     handleSignUpError(error) {
         let message = 'An error occurred during sign up. Please try again.';
         
-        if (error.message === 'Email already exists') {
+        if (error.message === 'Email already registered') {
             message = 'This email is already registered. Please use a different email or sign in.';
+        } else if (error.message.includes('Password must be')) {
+            message = error.message;
+        } else if (error.message.includes('Invalid email')) {
+            message = error.message;
+        } else if (error.message.includes('required')) {
+            message = error.message;
         }
         
         alert(message);

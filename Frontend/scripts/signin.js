@@ -199,8 +199,8 @@ class SignInManager {
             const password = formData.get('password');
             const rememberMe = formData.get('rememberMe') === 'on';
 
-            // Attempt sign in
-            const result = await window.authManager.signIn(email, password, rememberMe);
+            // Use secure auth API
+            const result = await window.secureAuth.signIn(email, password, rememberMe);
             
             if (result.success) {
                 this.handleSignInSuccess(result);
@@ -243,20 +243,13 @@ class SignInManager {
         // Clear form
         this.form.reset();
         
-        // Determine redirect URL
-        let redirectUrl = result.redirectUrl;
+        // Clear any stored redirect and go directly to result URL
+        sessionStorage.removeItem('signin_redirect');
         
-        // Check for stored redirect URL
-        const storedRedirect = sessionStorage.getItem('signin_redirect');
-        if (storedRedirect) {
-            redirectUrl = storedRedirect;
-            sessionStorage.removeItem('signin_redirect');
-        }
-        
-        // Redirect after short delay
+        // Redirect immediately to avoid confusion
         setTimeout(() => {
-            window.location.href = redirectUrl;
-        }, 1500);
+            window.location.href = result.redirectUrl;
+        }, 500);
     }
 
     handleSignInError(error) {
