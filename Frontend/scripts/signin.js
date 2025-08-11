@@ -245,8 +245,13 @@ class SignInManager {
         
         console.log('Signin successful, redirecting to:', result.redirectUrl);
         
-        // Redirect immediately to dashboard
-        window.location.href = result.redirectUrl;
+        // Show success message briefly then redirect
+        this.showSuccessMessage(`Welcome back, ${user.name}!`);
+        
+        // Small delay to prevent redirect loops and show success message
+        setTimeout(() => {
+            window.location.href = result.redirectUrl;
+        }, 800);
     }
 
     handleSignInError(error) {
