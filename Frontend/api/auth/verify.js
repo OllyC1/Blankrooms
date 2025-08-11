@@ -9,7 +9,13 @@ module.exports = async (req, res) => {
   }
 
   try {
-    const { token } = typeof req.body === 'string' ? JSON.parse(req.body) : req.body;
+    // Parse body properly for Vercel
+    let body = req.body;
+    if (typeof body === 'string') {
+      body = JSON.parse(body);
+    }
+    
+    const { token } = body;
     
     if (!token) {
       return res.status(401).json({ error: 'Token is required' });

@@ -9,7 +9,13 @@ module.exports = async (req, res) => {
   }
 
   try {
-    const { name, email, password } = typeof req.body === 'string' ? JSON.parse(req.body) : req.body;
+    // Parse body properly for Vercel
+    let body = req.body;
+    if (typeof body === 'string') {
+      body = JSON.parse(body);
+    }
+    
+    const { name, email, password } = body;
     
     // Basic validation
     if (!name || !email || !password) {
@@ -80,6 +86,10 @@ module.exports = async (req, res) => {
     
   } catch (error) {
     console.error('[signup] error:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    console.error('[signup] error stack:', error.stack);
+    res.status(500).json({ 
+      error: 'Internal server error',
+      details: process.env.NODE_ENV === 'development' ? error.message : undefined
+    });
   }
 };

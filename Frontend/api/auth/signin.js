@@ -9,7 +9,13 @@ module.exports = async (req, res) => {
   }
 
   try {
-    const { email, password, rememberMe } = typeof req.body === 'string' ? JSON.parse(req.body) : req.body;
+    // Parse body properly for Vercel
+    let body = req.body;
+    if (typeof body === 'string') {
+      body = JSON.parse(body);
+    }
+    
+    const { email, password, rememberMe } = body;
     
     // Basic validation
     if (!email || !password) {
