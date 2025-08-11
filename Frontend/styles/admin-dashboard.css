@@ -31,6 +31,13 @@
   display: flex;
   align-items: center;
   gap: var(--space-sm);
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.2s ease;
+}
+
+.sidebar-logo:hover {
+  transform: scale(1.05);
 }
 
 .sidebar-logo-img {

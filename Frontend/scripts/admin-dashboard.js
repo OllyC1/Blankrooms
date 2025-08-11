@@ -19,10 +19,10 @@ class AdminDashboard {
   }
 
   ensureAdmin() {
-    if (!window.authManager.isAuthenticated() || !window.authManager.hasRole('admin')) {
+    if (!window.auth.isAuthenticated() || !window.auth.hasRole('admin')) {
       window.location.href = 'signin.html?redirect=' + encodeURIComponent('admin-dashboard.html');
     } else {
-      const user = window.authManager.getCurrentUser();
+      const user = window.auth.getUser();
       document.getElementById('adminName').textContent = user.name;
     }
   }
@@ -150,7 +150,7 @@ class AdminDashboard {
       <tr>
         <td>${t.id}</td>
         <td>${t.eventTitle}</td>
-        <td>${window.authManager.demoUsers['user@demo.com'].name}</td>
+        <td>Demo User</td>
         <td>${t.ticketType}</td>
         <td>${t.quantity}</td>
         <td>${t.status}</td>
@@ -160,13 +160,21 @@ class AdminDashboard {
   }
 
   getAllDemoTickets() {
-    const demoUser = window.authManager.demoUsers['user@demo.com'];
+    const demoUser = { name: 'Demo User' };
     return demoUser?.tickets || [];
   }
 
   bindAddEdit() {
     const addBtn = document.getElementById('addNewBtn');
-    addBtn.addEventListener('click', () => this.openEventForm());
+    if (addBtn) {
+      console.log('Add New button found, binding click event');
+      addBtn.addEventListener('click', () => {
+        console.log('Add New button clicked!');
+        this.openEventForm();
+      });
+    } else {
+      console.error('Add New button not found!');
+    }
 
     // Modal basic wiring
     const closeBtn = document.getElementById('closeModal');
@@ -174,7 +182,12 @@ class AdminDashboard {
   }
 
   openEventForm(event = null) {
+    console.log('Opening event form...', event ? 'editing' : 'adding');
     const modal = document.getElementById('adminModal');
+    if (!modal) {
+      console.error('Modal not found!');
+      return;
+    }
     document.getElementById('modalTitle').textContent = event ? 'Edit Event' : 'Add Event';
     const e = event || { title:'', date:'', location:'', price:0, image:'', description:'', features:[], ticketTypes: [] };
 

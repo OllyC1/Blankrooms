@@ -115,6 +115,11 @@ body {
     gap: var(--space-md);
     text-decoration: none;
     color: var(--primary-white);
+    transition: transform 0.2s ease;
+}
+
+.nav__logo:hover {
+    transform: scale(1.05);
 }
 
 .nav__logo-img {
