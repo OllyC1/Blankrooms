@@ -52,34 +52,38 @@
 
     <!-- Event Detail Page -->
     <main class="event-detail-page">
-        <!-- Hero Section -->
-        <section class="event-hero">
-            <div class="event-hero__background">
-                <img src="https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=1200&h=800&fit=crop&auto=format&q=80" alt="Event Image" class="event-hero__img" id="eventImage">
-                <div class="event-hero__overlay"></div>
-            </div>
-            
-            <div class="event-hero__content">
-                <h1 class="event-hero__title" id="eventTitle">Shang-Chi</h1>
-                <div class="event-hero__meta">
-                    <span class="event-hero__date" id="eventDate">3 March 2025</span>
-                    <span class="event-hero__location" id="eventLocation">Newcastle, UK</span>
+        <!-- Hero Image Section -->
+        <section class="event-hero-image">
+            <div class="event-hero-image__container">
+                <img src="https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=1200&h=800&fit=crop&auto=format&q=80" alt="Event Image" class="event-hero-image__img" id="eventImage">
+                <div class="event-hero-image__overlay">
+                    <button class="event-hero-image__cta" id="getTicketsBtn">Get tickets</button>
                 </div>
-                <button class="event-hero__cta" id="getTicketsBtn">Get tickets</button>
             </div>
         </section>
 
-        <!-- Event Information -->
-        <section class="event-info">
-            <div class="event-info__container">
-                <div class="event-info__content">
-                    <div class="event-info__description">
-                        <p class="event-info__text" id="eventDescription">
-                            Experience an incredible martial arts and action-packed entertainment event featuring live performances, interactive experiences, and multi-genre entertainment.
-                        </p>
-                        <p class="event-info__additional">
-                            Octopuses humming. David, the Octopus. Show me your tentacles. All of them. The sub did not explode, and the fireworks may have been a tactical mistake. The mood is electric. He's going to turn us into monsters. Let's see how everyone loves you when you're the monster.
-                        </p>
+        <!-- Event Information Section -->
+        <section class="event-content">
+            <div class="event-content__container">
+                <div class="event-content__header">
+                    <h1 class="event-content__title" id="eventTitle">Shang-Chi</h1>
+                    <div class="event-content__meta">
+                        <div class="event-content__date" id="eventDate">
+                            <span class="event-content__date-label">Date</span>
+                            <span class="event-content__date-value">3 March 2025</span>
+                        </div>
+                        <div class="event-content__location" id="eventLocation">
+                            <span class="event-content__location-label">Location</span>
+                            <span class="event-content__location-value">Newcastle, UK</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="event-content__description">
+                    <h2 class="event-content__description-title">About This Event</h2>
+                    <div class="event-content__description-text" id="eventDescription">
+                        <p>Experience an incredible martial arts and action-packed entertainment event featuring live performances, interactive experiences, and multi-genre entertainment.</p>
+                        <p>Octopuses humming. David, the Octopus. Show me your tentacles. All of them. The sub did not explode, and the fireworks may have been a tactical mistake. The mood is electric. He's going to turn us into monsters. Let's see how everyone loves you when you're the monster.</p>
                     </div>
                 </div>
             </div>

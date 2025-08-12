@@ -121,20 +121,19 @@ class EventDetailPage {
             };
         }
         
+        // Populate content with new structure
         const titleElement = document.getElementById('eventTitle');
-        const dateElement = document.getElementById('eventDate');
-        const locationElement = document.getElementById('eventLocation');
+        const dateValueElement = document.querySelector('.event-content__date-value');
+        const locationValueElement = document.querySelector('.event-content__location-value');
+        const descriptionElement = document.getElementById('eventDescription');
         
         if (titleElement) titleElement.textContent = event.title;
-        if (dateElement) dateElement.textContent = event.date;
-        if (locationElement) locationElement.textContent = event.location;
-
-        // Info section only contains description now
-
-        // Populate description
-        const descriptionElement = document.getElementById('eventDescription');
-        if (descriptionElement) {
-            descriptionElement.textContent = event.description;
+        if (dateValueElement) dateValueElement.textContent = event.date;
+        if (locationValueElement) locationValueElement.textContent = event.location;
+        
+        if (descriptionElement && event.description) {
+            // Clear existing content and add the description
+            descriptionElement.innerHTML = `<p>${event.description}</p>`;
         }
 
         // Features are no longer displayed in this simplified design
