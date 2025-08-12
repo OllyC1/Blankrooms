@@ -19,10 +19,12 @@ class EventManager {
         this.init();
     }
 
-    init() {
-        this.populateEventCards();
+    async init() {
+        console.log('EventManager init starting...');
+        await this.populateEventCards();
         this.bindEventListeners();
         this.initializeEventCards();
+        console.log('EventManager init completed');
         // Refresh when admin updates events (if coming from same origin)
         window.addEventListener('blankrooms:events-updated', () => {
             // Re-read global EVENTS_DATA rebuilt by event-data.js on load; force reload of data map
@@ -113,10 +115,14 @@ class EventManager {
         });
     }
 
-    populateEventCards() {
+    async populateEventCards() {
+        console.log('populateEventCards called');
         // Render events dynamically from data store
         const container = document.querySelector('.events-grid');
-        if (!container) return;
+        if (!container) {
+            console.error('Events grid container not found!');
+            return;
+        }
 
         const fetchFromApi = async () => {
             try {
