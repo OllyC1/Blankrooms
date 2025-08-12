@@ -136,7 +136,8 @@ class EventManager {
             }
         };
 
-        const events = window.__events_cache || await fetchFromApi();
+        // Always fetch fresh data to show newly added events
+        const events = await fetchFromApi();
         window.__events_cache = events;
 
         // Sort by date ascending
@@ -154,7 +155,7 @@ class EventManager {
                     <h3 class="event-card__title">${ev.title}</h3>
                     <p class="event-card__date">${ev.date}</p>
                     <p class="event-card__location">${ev.location}</p>
-                    <div class="event-card__price">${EventUtils.formatPrice(ev.price)}</div>
+                    <div class="event-card__price">${this.getEventPrice(ev)}</div>
                 </div>
             </article>
         `).join('');
@@ -329,6 +330,26 @@ Thank you for choosing Blank Rooms!
         const timestamp = Date.now().toString(36);
         const randomStr = Math.random().toString(36).substring(2, 7);
         return `BR-${timestamp}-${randomStr}`.toUpperCase();
+    }
+
+    getEventPrice(event) {
+        // Handle new events with ticketTypes or legacy events with price
+        if (event.ticketTypes && Array.isArray(event.ticketTypes) && event.ticketTypes.length > 0) {
+            // Find the lowest price from ticket types
+            const prices = event.ticketTypes.map(t => Number(t.price)).filter(p => !isNaN(p));
+            if (prices.length > 0) {
+                const minPrice = Math.min(...prices);
+                return `From ${EventUtils.formatPrice(minPrice)}`;
+            }
+        }
+        
+        // Fallback to legacy price field
+        if (event.price !== undefined && event.price !== null) {
+            return EventUtils.formatPrice(Number(event.price));
+        }
+        
+        // Default fallback
+        return 'Price TBA';
     }
 
     loadMoreEvents() {
