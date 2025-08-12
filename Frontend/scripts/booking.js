@@ -11,28 +11,159 @@ class BookingManager {
             vip: 80
         };
         this.totalAmount = 0;
+        this.dynamicTicketTypes = [];
         
         this.init();
     }
+    
+    setupTicketTypes() {
+        if (!this.currentEvent || !this.currentEvent.ticketTypes) {
+            console.log('No ticket types found, using defaults');
+            // Fallback to default ticket types for legacy events
+            this.ticketQuantities = { early: 0, vip: 0 };
+            this.ticketPrices = { early: 40, vip: 80 };
+            this.dynamicTicketTypes = [
+                { id: 'early', name: 'Early Access', price: 40 },
+                { id: 'vip', name: 'VIP Access', price: 80 }
+            ];
+            return;
+        }
+        
+        console.log('Setting up dynamic ticket types:', this.currentEvent.ticketTypes);
+        
+        // Clear existing ticket data
+        this.ticketQuantities = {};
+        this.ticketPrices = {};
+        this.dynamicTicketTypes = [];
+        
+        // Setup dynamic ticket types from event data
+        this.currentEvent.ticketTypes.forEach((ticket, index) => {
+            const ticketId = `ticket_${index}`;
+            this.ticketQuantities[ticketId] = 0;
+            this.ticketPrices[ticketId] = Number(ticket.price);
+            this.dynamicTicketTypes.push({
+                id: ticketId,
+                name: ticket.name,
+                price: Number(ticket.price)
+            });
+        });
+        
+        console.log('Dynamic ticket types setup:', this.dynamicTicketTypes);
+        console.log('Ticket prices:', this.ticketPrices);
+        
+        // Render the dynamic ticket types
+        this.renderTicketTypes();
+    }
+    
+    renderTicketTypes() {
+        const ticketTypesContainer = document.querySelector('.ticket-types');
+        if (!ticketTypesContainer) {
+            console.error('Ticket types container not found');
+            return;
+        }
+        
+        console.log('Rendering ticket types...', this.dynamicTicketTypes);
+        
+        // Clear existing ticket types
+        ticketTypesContainer.innerHTML = '';
+        
+        // Render each ticket type
+        this.dynamicTicketTypes.forEach(ticket => {
+            const ticketElement = document.createElement('div');
+            ticketElement.className = 'ticket-type';
+            ticketElement.setAttribute('data-ticket-type', ticket.id);
+            
+            ticketElement.innerHTML = `
+                <div class="ticket-type__info">
+                    <h3 class="ticket-type__name">${ticket.name}</h3>
+                    <p class="ticket-type__price">£${ticket.price.toFixed(2)}</p>
+                </div>
+                <div class="ticket-type__controls">
+                    <button class="ticket-btn ticket-btn--minus" data-action="decrease" data-ticket="${ticket.id}">-</button>
+                    <span class="ticket-quantity" id="${ticket.id}Quantity">0</span>
+                    <button class="ticket-btn ticket-btn--plus" data-action="increase" data-ticket="${ticket.id}">+</button>
+                </div>
+            `;
+            
+            ticketTypesContainer.appendChild(ticketElement);
+        });
+        
+        // Re-bind event listeners for the new ticket controls
+        this.bindTicketControls();
+    }
+    
+    bindTicketControls() {
+        // Remove existing listeners and re-bind to new elements
+        document.querySelectorAll('.ticket-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                const action = e.target.getAttribute('data-action');
+                const ticketType = e.target.getAttribute('data-ticket');
+                
+                if (action === 'increase') {
+                    this.increaseTicket(ticketType);
+                } else if (action === 'decrease') {
+                    this.decreaseTicket(ticketType);
+                }
+            });
+        });
+    }
 
-    init() {
-        this.loadEventFromURL();
+    async init() {
+        await this.loadEventFromURL();
         this.setupEventListeners();
         this.updateTotalAmount();
     }
 
-    loadEventFromURL() {
+    async loadEventFromURL() {
         const urlParams = new URLSearchParams(window.location.search);
         const eventId = urlParams.get('eventId');
         
-        if (eventId && EventUtils.getEventById(eventId)) {
-            this.currentEvent = EventUtils.getEventById(eventId);
-        } else {
-            // Default to first event if no ID provided or invalid
-            this.currentEvent = EventUtils.getEventById(1);
-        }
+        console.log('Loading event for booking, ID:', eventId);
         
-        this.populateEventData();
+        try {
+            // Load events from API
+            const res = await fetch('/api/events', { cache: 'no-store' });
+            let events = [];
+            
+            if (res.ok) {
+                const apiEvents = await res.json();
+                events = apiEvents.map(e => ({
+                    ...e,
+                    id: e._id || e.id
+                }));
+                console.log('Loaded events for booking:', events);
+            } else {
+                // Fallback to static data
+                events = EventUtils ? EventUtils.getAllEvents() : Object.values(window.EVENTS_DATA || {});
+            }
+            
+            if (eventId) {
+                this.currentEvent = events.find(e => String(e.id) === String(eventId));
+            }
+            
+            if (!this.currentEvent && events.length > 0) {
+                this.currentEvent = events[0];
+            }
+            
+            console.log('Current event for booking:', this.currentEvent);
+            
+            if (this.currentEvent) {
+                this.setupTicketTypes();
+                this.populateEventData();
+            } else {
+                console.error('No event found for booking');
+            }
+            
+        } catch (error) {
+            console.error('Error loading event for booking:', error);
+            // Fallback to static data
+            if (eventId && EventUtils && EventUtils.getEventById(eventId)) {
+                this.currentEvent = EventUtils.getEventById(eventId);
+                this.setupTicketTypes();
+                this.populateEventData();
+            }
+        }
     }
 
     populateEventData() {
@@ -68,9 +199,7 @@ class BookingManager {
             location.textContent = event.location;
         });
 
-        // Update ticket prices based on event
-        document.getElementById('earlyPrice').textContent = EventUtils.formatPrice(this.ticketPrices.early);
-        document.getElementById('vipPrice').textContent = EventUtils.formatPrice(this.ticketPrices.vip);
+        // Ticket prices are now handled dynamically in renderTicketTypes()
     }
 
     setupEventListeners() {
@@ -108,36 +237,69 @@ class BookingManager {
         });
     }
 
-    updateTicketQuantity(ticketType, action) {
-        if (action === 'increase') {
+    increaseTicket(ticketType) {
+        if (this.ticketQuantities[ticketType] !== undefined) {
             this.ticketQuantities[ticketType]++;
-        } else if (action === 'decrease' && this.ticketQuantities[ticketType] > 0) {
-            this.ticketQuantities[ticketType]--;
+            this.updateTicketDisplay(ticketType);
         }
-
+    }
+    
+    decreaseTicket(ticketType) {
+        if (this.ticketQuantities[ticketType] !== undefined && this.ticketQuantities[ticketType] > 0) {
+            this.ticketQuantities[ticketType]--;
+            this.updateTicketDisplay(ticketType);
+        }
+    }
+    
+    updateTicketDisplay(ticketType) {
         // Update quantity display
-        document.getElementById(`${ticketType}Quantity`).textContent = this.ticketQuantities[ticketType];
+        const quantityElement = document.getElementById(`${ticketType}Quantity`);
+        if (quantityElement) {
+            quantityElement.textContent = this.ticketQuantities[ticketType];
+        }
         
         // Update minus button state
         const minusBtn = document.querySelector(`[data-action="decrease"][data-ticket="${ticketType}"]`);
-        minusBtn.disabled = this.ticketQuantities[ticketType] === 0;
+        if (minusBtn) {
+            minusBtn.disabled = this.ticketQuantities[ticketType] === 0;
+        }
 
         this.updateTotalAmount();
         this.updateProceedButton();
     }
 
+    updateTicketQuantity(ticketType, action) {
+        // Legacy method for backward compatibility
+        if (action === 'increase') {
+            this.increaseTicket(ticketType);
+        } else if (action === 'decrease') {
+            this.decreaseTicket(ticketType);
+        }
+    }
+
     updateTotalAmount() {
-        this.totalAmount = (this.ticketQuantities.early * this.ticketPrices.early) + 
-                          (this.ticketQuantities.vip * this.ticketPrices.vip);
+        // Calculate total dynamically for all ticket types
+        this.totalAmount = 0;
+        Object.keys(this.ticketQuantities).forEach(ticketType => {
+            const quantity = this.ticketQuantities[ticketType];
+            const price = this.ticketPrices[ticketType] || 0;
+            this.totalAmount += quantity * price;
+        });
         
         // Update total display
-        document.getElementById('totalAmount').textContent = EventUtils.formatPrice(this.totalAmount);
-        document.getElementById('purchaseTotalAmount').textContent = EventUtils.formatPrice(this.totalAmount);
+        const totalElement = document.getElementById('totalAmount');
+        const purchaseTotalElement = document.getElementById('purchaseTotalAmount');
+        
+        if (totalElement) totalElement.textContent = EventUtils.formatPrice(this.totalAmount);
+        if (purchaseTotalElement) purchaseTotalElement.textContent = EventUtils.formatPrice(this.totalAmount);
     }
 
     updateProceedButton() {
         const proceedBtn = document.getElementById('proceedToPayment');
-        const hasTickets = this.ticketQuantities.early > 0 || this.ticketQuantities.vip > 0;
+        if (!proceedBtn) return;
+        
+        // Check if any tickets are selected
+        const hasTickets = Object.values(this.ticketQuantities).some(quantity => quantity > 0);
         proceedBtn.disabled = !hasTickets;
     }
 
