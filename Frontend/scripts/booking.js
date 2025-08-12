@@ -42,7 +42,10 @@ class BookingManager {
             return;
         }
         
-        console.log('Setting up dynamic ticket types:', this.currentEvent.ticketTypes);
+        console.log('🎫 Setting up dynamic ticket types from event:', this.currentEvent.ticketTypes);
+        console.log('🎫 TicketTypes type:', typeof this.currentEvent.ticketTypes);
+        console.log('🎫 TicketTypes isArray:', Array.isArray(this.currentEvent.ticketTypes));
+        console.log('🎫 TicketTypes length:', this.currentEvent.ticketTypes?.length);
         
         // Clear existing ticket data
         this.ticketQuantities = {};
@@ -51,6 +54,7 @@ class BookingManager {
         
         // Setup dynamic ticket types from event data
         this.currentEvent.ticketTypes.forEach((ticket, index) => {
+            console.log(`🎫 Processing ticket ${index}:`, ticket);
             const ticketId = `ticket_${index}`;
             this.ticketQuantities[ticketId] = 0;
             this.ticketPrices[ticketId] = Number(ticket.price);
@@ -61,8 +65,8 @@ class BookingManager {
             });
         });
         
-        console.log('Dynamic ticket types setup:', this.dynamicTicketTypes);
-        console.log('Ticket prices:', this.ticketPrices);
+        console.log('🎫 ✅ Dynamic ticket types setup:', this.dynamicTicketTypes);
+        console.log('🎫 ✅ Ticket prices:', this.ticketPrices);
         
         // Render the dynamic ticket types
         this.renderTicketTypes();
@@ -135,8 +139,13 @@ class BookingManager {
         console.log('Loading event for booking, ID:', eventId);
         
         try {
-            // Load events from API
-            const res = await fetch('/api/events', { cache: 'no-store' });
+            // Force no cache to get fresh data
+            const res = await fetch('/api/events?' + Date.now(), { 
+                cache: 'no-store',
+                headers: {
+                    'Cache-Control': 'no-cache'
+                }
+            });
             let events = [];
             
             if (res.ok) {
@@ -145,21 +154,29 @@ class BookingManager {
                     ...e,
                     id: e._id || e.id
                 }));
-                console.log('Loaded events for booking:', events);
+                console.log('🎫 Raw API events loaded:', apiEvents);
+                console.log('🎫 Normalized events for booking:', events);
             } else {
+                console.log('🎫 API failed, falling back to static data');
                 // Fallback to static data
                 events = EventUtils ? EventUtils.getAllEvents() : Object.values(window.EVENTS_DATA || {});
             }
             
             if (eventId) {
                 this.currentEvent = events.find(e => String(e.id) === String(eventId));
+                console.log('🎫 Found matching event by ID:', this.currentEvent);
             }
             
             if (!this.currentEvent && events.length > 0) {
                 this.currentEvent = events[0];
+                console.log('🎫 Using first event as fallback:', this.currentEvent);
             }
             
-            console.log('Current event for booking:', this.currentEvent);
+            console.log('🎫 FINAL Current event for booking:');
+            console.log('   - Title:', this.currentEvent?.title);
+            console.log('   - ID:', this.currentEvent?.id);
+            console.log('   - TicketTypes:', this.currentEvent?.ticketTypes);
+            console.log('   - Full event object:', this.currentEvent);
             
             if (this.currentEvent) {
                 this.setupTicketTypes();
