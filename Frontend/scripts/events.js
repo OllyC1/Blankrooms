@@ -120,30 +120,48 @@ class EventManager {
 
         const fetchFromApi = async () => {
             try {
+                console.log('Fetching events from API...');
                 const res = await fetch('/api/events', { cache: 'no-store' });
-                if (!res.ok) throw new Error('api failed');
+                console.log('API Response status:', res.status);
+                
+                if (!res.ok) throw new Error(`API failed with status: ${res.status}`);
+                
                 const apiEvents = await res.json();
+                console.log('Raw API events:', apiEvents);
+                
                 // Normalize MongoDB _id to id for consistency
-                return apiEvents.map(e => ({
+                const normalizedEvents = apiEvents.map(e => ({
                     ...e,
                     id: e._id || e.id
                 }));
-            } catch {
+                console.log('Normalized events:', normalizedEvents);
+                
+                return normalizedEvents;
+            } catch (error) {
+                console.error('API fetch failed:', error);
                 // fallback to in-memory data
-                return (typeof EventUtils !== 'undefined' && EventUtils.getAllEvents)
+                const fallbackEvents = (typeof EventUtils !== 'undefined' && EventUtils.getAllEvents)
                     ? EventUtils.getAllEvents()
                     : Object.values(window.EVENTS_DATA || {});
+                console.log('Using fallback events:', fallbackEvents);
+                return fallbackEvents;
             }
         };
 
         // Always fetch fresh data to show newly added events
         const events = await fetchFromApi();
         window.__events_cache = events;
+        
+        console.log('Events to display:', events);
+        console.log('Events count:', events.length);
 
         // Sort by date ascending
         const sorted = events.slice().sort((a, b) => new Date(a.date) - new Date(b.date));
+        console.log('Sorted events:', sorted);
 
-        container.innerHTML = sorted.map(ev => `
+        const renderedHTML = sorted.map(ev => {
+            console.log('Rendering event:', ev.title, 'with image:', ev.image);
+            return `
             <article class="event-card" data-event-id="${ev.id}">
                 <div class="event-card__image">
                     <img src="${ImageUtils.getEventImage(ev, 'card')}" alt="${ev.title} Event" class="event-card__img">
@@ -158,7 +176,11 @@ class EventManager {
                     <div class="event-card__price">${this.getEventPrice(ev)}</div>
                 </div>
             </article>
-        `).join('');
+        `;
+        }).join('');
+        
+        console.log('Final HTML length:', renderedHTML.length);
+        container.innerHTML = renderedHTML;
 
         // Re-bind listeners to the new cards (use event delegation for reliability)
         container.addEventListener('click', (e) => {
