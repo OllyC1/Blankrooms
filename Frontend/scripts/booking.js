@@ -16,16 +16,29 @@ class BookingManager {
         this.init();
     }
     
+    useDefaultTicketTypes() {
+        console.log('Using default ticket types');
+        this.ticketQuantities = { early: 0, vip: 0 };
+        this.ticketPrices = { early: 40, vip: 80 };
+        this.dynamicTicketTypes = [
+            { id: 'early', name: 'Early Access', price: 40 },
+            { id: 'vip', name: 'VIP Access', price: 80 }
+        ];
+        this.renderTicketTypes();
+    }
+    
     setupTicketTypes() {
-        if (!this.currentEvent || !this.currentEvent.ticketTypes) {
-            console.log('No ticket types found, using defaults');
-            // Fallback to default ticket types for legacy events
-            this.ticketQuantities = { early: 0, vip: 0 };
-            this.ticketPrices = { early: 40, vip: 80 };
-            this.dynamicTicketTypes = [
-                { id: 'early', name: 'Early Access', price: 40 },
-                { id: 'vip', name: 'VIP Access', price: 80 }
-            ];
+        console.log('setupTicketTypes called with event:', this.currentEvent);
+        
+        if (!this.currentEvent) {
+            console.log('No current event, using defaults');
+            this.useDefaultTicketTypes();
+            return;
+        }
+        
+        if (!this.currentEvent.ticketTypes || !Array.isArray(this.currentEvent.ticketTypes) || this.currentEvent.ticketTypes.length === 0) {
+            console.log('No ticket types array found, using defaults. ticketTypes:', this.currentEvent.ticketTypes);
+            this.useDefaultTicketTypes();
             return;
         }
         
@@ -203,14 +216,8 @@ class BookingManager {
     }
 
     setupEventListeners() {
-        // Ticket quantity controls
-        document.querySelectorAll('.ticket-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const action = e.target.dataset.action;
-                const ticketType = e.target.dataset.ticket;
-                this.updateTicketQuantity(ticketType, action);
-            });
-        });
+        // Note: Ticket quantity controls are now handled in bindTicketControls()
+        // called from renderTicketTypes() to ensure they work with dynamic content
 
         // Step navigation
         document.getElementById('proceedToPayment').addEventListener('click', () => {
