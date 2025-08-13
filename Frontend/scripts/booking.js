@@ -73,9 +73,9 @@ class BookingManager {
     }
     
     renderTicketTypes() {
-        const ticketTypesContainer = document.querySelector('.ticket-types');
+        const ticketTypesContainer = document.querySelector('.ticket-options');
         if (!ticketTypesContainer) {
-            console.error('Ticket types container not found');
+            console.error('Ticket options container not found');
             return;
         }
         
