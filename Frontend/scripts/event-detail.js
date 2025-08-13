@@ -30,12 +30,55 @@ class EventDetailPage {
         const urlParams = new URLSearchParams(window.location.search);
         const eventId = urlParams.get('id');
         
-        console.log('URL Event ID:', eventId);
+        console.log('🎯 Loading event detail for ID:', eventId);
+        
+        if (!eventId) {
+            console.error('No event ID provided in URL');
+            this.showErrorState();
+            return;
+        }
+
+        // Show loading state immediately
+        this.showLoadingState();
         
         try {
-            // Load events from API first
-            const res = await fetch('/api/events', { cache: 'no-store' });
+            // First check session cache from events page  
+            const cacheKey = 'blankrooms_events_cache';
+            const cached = sessionStorage.getItem(cacheKey);
             let events = [];
+
+            if (cached) {
+                console.log('⚡ Using cached events from session');
+                events = JSON.parse(cached);
+                this.currentEvent = events.find(e => String(e.id) === String(eventId));
+                
+                if (this.currentEvent) {
+                    console.log('✅ Found event in cache:', this.currentEvent);
+                    this.populateEventData();
+                    return;
+                }
+            }
+
+            // If not in cache, try to fetch specific event first
+            console.log('🌐 Fetching specific event from API...');
+            try {
+                const specificRes = await fetch(`/api/events/${eventId}`);
+                if (specificRes.ok) {
+                    const apiEvent = await specificRes.json();
+                    this.currentEvent = {
+                        ...apiEvent,
+                        id: apiEvent._id || apiEvent.id
+                    };
+                    console.log('✅ Loaded specific event:', this.currentEvent);
+                    this.populateEventData();
+                    return;
+                }
+            } catch (specificError) {
+                console.log('Specific event fetch failed, trying all events');
+            }
+
+            // Fallback: Load all events
+            const res = await fetch('/api/events');
             
             if (res.ok) {
                 const apiEvents = await res.json();
@@ -44,6 +87,9 @@ class EventDetailPage {
                     ...e,
                     id: e._id || e.id
                 }));
+                
+                // Cache for future use
+                sessionStorage.setItem(cacheKey, JSON.stringify(events));
             } else {
                 // Fallback to static data
                 events = EVENTS_DATA ? Object.values(EVENTS_DATA) : [];
@@ -62,19 +108,60 @@ class EventDetailPage {
             }
             
             if (this.currentEvent) {
-                console.log('Loaded event:', this.currentEvent);
+                console.log('✅ Loaded event:', this.currentEvent);
                 this.populateEventData();
             } else {
-                console.error('No events found');
-                document.querySelector('.event-hero__title').textContent = 'Event Not Found';
+                console.error('❌ No events found');
+                this.showErrorState();
             }
         } catch (error) {
-            console.error('Error loading event:', error);
+            console.error('❌ Error loading event:', error);
             // Fallback to static data
-            if (eventId && EventUtils.getEventById(eventId)) {
+            if (eventId && typeof EventUtils !== 'undefined' && EventUtils.getEventById) {
                 this.currentEvent = EventUtils.getEventById(eventId);
-                this.populateEventData();
+                if (this.currentEvent) {
+                    this.populateEventData();
+                } else {
+                    this.showErrorState();
+                }
+            } else {
+                this.showErrorState();
             }
+        }
+    }
+
+    showLoadingState() {
+        const titleEl = document.getElementById('eventTitle');
+        const imageEl = document.getElementById('eventImage');
+        const dateEl = document.querySelector('.event-content__date-value');
+        const locationEl = document.querySelector('.event-content__location-value');
+        const descriptionEl = document.getElementById('eventDescription');
+
+        if (titleEl) titleEl.textContent = 'Loading...';
+        if (imageEl) {
+            imageEl.style.opacity = '0.3';
+            imageEl.style.filter = 'blur(2px)';
+        }
+        if (dateEl) dateEl.textContent = 'Loading...';
+        if (locationEl) locationEl.textContent = 'Loading...';
+        if (descriptionEl) descriptionEl.innerHTML = '<p>⏳ Loading event details...</p>';
+    }
+
+    showErrorState() {
+        const titleEl = document.getElementById('eventTitle');
+        const descriptionEl = document.getElementById('eventDescription');
+        const imageEl = document.getElementById('eventImage');
+
+        if (titleEl) titleEl.textContent = 'Event Not Found';
+        if (imageEl) {
+            imageEl.style.opacity = '0.3';
+            imageEl.alt = 'Event not found';
+        }
+        if (descriptionEl) {
+            descriptionEl.innerHTML = `
+                <p>❌ Sorry, we couldn't find this event. It may have been removed or the link is incorrect.</p>
+                <p><a href="events.html" style="color: var(--primary-color); text-decoration: none;">← Back to Events</a></p>
+            `;
         }
     }
 

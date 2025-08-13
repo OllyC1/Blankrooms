@@ -124,10 +124,31 @@ class EventManager {
             return;
         }
 
+        // Show loading state immediately
+        container.innerHTML = `
+            <div class="events-loading">
+                <div class="loading-spinner"></div>
+                <p>Loading amazing events...</p>
+            </div>
+        `;
+
         const fetchFromApi = async () => {
             try {
-                console.log('Fetching events from API...');
-                const res = await fetch('/api/events', { cache: 'no-store' });
+                // Check cache first (3 minute cache for better performance)
+                const cacheKey = 'blankrooms_events_cache';
+                const cacheTimeKey = 'blankrooms_events_cache_time';
+                const cached = sessionStorage.getItem(cacheKey);
+                const cacheTime = sessionStorage.getItem(cacheTimeKey);
+                const now = Date.now();
+                const threeMinutes = 3 * 60 * 1000;
+
+                if (cached && cacheTime && (now - parseInt(cacheTime)) < threeMinutes) {
+                    console.log('⚡ Using cached events data');
+                    return JSON.parse(cached);
+                }
+
+                console.log('🌐 Fetching events from API...');
+                const res = await fetch('/api/events');
                 console.log('API Response status:', res.status);
                 
                 if (!res.ok) throw new Error(`API failed with status: ${res.status}`);
@@ -141,6 +162,10 @@ class EventManager {
                     id: e._id || e.id
                 }));
                 console.log('Normalized events:', normalizedEvents);
+                
+                // Cache the results for faster subsequent loads
+                sessionStorage.setItem(cacheKey, JSON.stringify(normalizedEvents));
+                sessionStorage.setItem(cacheTimeKey, now.toString());
                 
                 return normalizedEvents;
             } catch (error) {
@@ -165,12 +190,19 @@ class EventManager {
         const sorted = events.slice().sort((a, b) => new Date(a.date) - new Date(b.date));
         console.log('Sorted events:', sorted);
 
-        const renderedHTML = sorted.map(ev => {
+                const renderedHTML = sorted.map(ev => {
             console.log('Rendering event:', ev.title, 'with image:', ev.image);
+            const imageUrl = ImageUtils.getEventImage(ev, 'card');
             return `
             <article class="event-card" data-event-id="${ev.id}">
                 <div class="event-card__image">
-                    <img src="${ImageUtils.getEventImage(ev, 'card')}" alt="${ev.title} Event" class="event-card__img">
+                    <img 
+                        data-src="${imageUrl}" 
+                        alt="${ev.title} Event" 
+                        class="event-card__img lazy-load"
+                        loading="lazy"
+                        src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgdmlld0JveD0iMCAwIDQwMCAzMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjQwMCIgaGVpZ2h0PSIzMDAiIGZpbGw9IiNmNWY1ZjUiLz48L3N2Zz4="
+                    >
                     <div class="event-card__overlay">
                         <button class="event-card__quick-book">Quick Book</button>
                     </div>
@@ -182,11 +214,14 @@ class EventManager {
                     <div class="event-card__price">${this.getEventPrice(ev)}</div>
                 </div>
             </article>
-        `;
+            `;
         }).join('');
         
         console.log('Final HTML length:', renderedHTML.length);
         container.innerHTML = renderedHTML;
+
+        // Initialize lazy loading for images
+        this.initLazyLoading();
 
         // Re-bind listeners to the new cards (use event delegation for reliability)
         container.addEventListener('click', (e) => {
@@ -204,6 +239,32 @@ class EventManager {
             }
         });
         this.initializeEventCards();
+    }
+
+    initLazyLoading() {
+        // Modern Intersection Observer for lazy loading
+        if ('IntersectionObserver' in window) {
+            const imageObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const img = entry.target;
+                        img.src = img.dataset.src;
+                        img.classList.remove('lazy-load');
+                        img.classList.add('lazy-loaded');
+                        imageObserver.unobserve(img);
+                    }
+                });
+            });
+
+            document.querySelectorAll('img.lazy-load').forEach(img => {
+                imageObserver.observe(img);
+            });
+        } else {
+            // Fallback for older browsers
+            document.querySelectorAll('img.lazy-load').forEach(img => {
+                img.src = img.dataset.src;
+            });
+        }
     }
 
     initializeEventCards() {

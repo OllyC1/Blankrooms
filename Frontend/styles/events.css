@@ -767,3 +767,70 @@
         grid-template-columns: 1fr;
     }
 }
+
+/* ===================================
+   PERFORMANCE & LOADING OPTIMIZATIONS
+   ================================= */
+
+/* Loading States */
+.events-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 4rem 2rem;
+    text-align: center;
+    min-height: 300px;
+}
+
+.loading-spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid var(--primary-color);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 1rem;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Lazy Loading Animations */
+img.lazy-load {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    background: #f5f5f5;
+}
+
+img.lazy-loaded {
+    opacity: 1;
+}
+
+/* Fade-in animations for dynamic content */
+.animate-fade-in {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 0.6s ease forwards;
+}
+
+@keyframes fadeInUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Performance optimizations */
+.event-card {
+    will-change: transform;
+    backface-visibility: hidden;
+    perspective: 1000px;
+}
+
+.event-card__img {
+    transform: translateZ(0);
+    will-change: transform;
+}

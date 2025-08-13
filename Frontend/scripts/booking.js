@@ -139,27 +139,35 @@ class BookingManager {
         console.log('Loading event for booking, ID:', eventId);
         
         try {
-            // Force no cache to get fresh data
-            const res = await fetch('/api/events?' + Date.now(), { 
-                cache: 'no-store',
-                headers: {
-                    'Cache-Control': 'no-cache'
-                }
-            });
+            // Check session cache first for speed
+            const cacheKey = 'blankrooms_events_cache';
+            const cached = sessionStorage.getItem(cacheKey);
             let events = [];
-            
-            if (res.ok) {
-                const apiEvents = await res.json();
-                events = apiEvents.map(e => ({
-                    ...e,
-                    id: e._id || e.id
-                }));
-                console.log('🎫 Raw API events loaded:', apiEvents);
-                console.log('🎫 Normalized events for booking:', events);
+
+            if (cached) {
+                console.log('🎫 ⚡ Using cached events for booking');
+                events = JSON.parse(cached);
             } else {
-                console.log('🎫 API failed, falling back to static data');
-                // Fallback to static data
-                events = EventUtils ? EventUtils.getAllEvents() : Object.values(window.EVENTS_DATA || {});
+                // Fetch fresh data if no cache
+                console.log('🎫 🌐 Fetching fresh events for booking...');
+                const res = await fetch('/api/events');
+                
+                if (res.ok) {
+                    const apiEvents = await res.json();
+                    events = apiEvents.map(e => ({
+                        ...e,
+                        id: e._id || e.id
+                    }));
+                    
+                    // Cache for future use
+                    sessionStorage.setItem(cacheKey, JSON.stringify(events));
+                    console.log('🎫 Raw API events loaded:', apiEvents);
+                    console.log('🎫 Normalized events for booking:', events);
+                } else {
+                    console.log('🎫 API failed, falling back to static data');
+                    // Fallback to static data
+                    events = EventUtils ? EventUtils.getAllEvents() : Object.values(window.EVENTS_DATA || {});
+                }
             }
             
             if (eventId) {
